@@ -7,6 +7,7 @@ package names;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
 import java.util.*;
 
 /**
@@ -23,7 +24,24 @@ class Baby{
         this.gender = gen;
 
     }
+    public String strinConv(){
+        return this.name + ", "  + this.gender + ", " + this.frequency;
+    }
+    public String getName(){
+        return this.name;
+    }
+    public String getGender(){
+        return this.gender;
+    }
 
+    public int getFrequency() {
+        return frequency;
+    }
+}
+class YearFileFilter implements FilenameFilter{
+    public boolean accept(File dir, String fname){
+        return fname.matches("\\d{4}");
+    }
 }
 class GenderSort implements Comparator<Baby>{
     public int compare(Baby favorite, Baby middle){
@@ -114,6 +132,20 @@ public class Main {
         }
         return 0;
     }
+
+    /**
+     * This method returns the proper string representation of a list of baby names
+     * @param temp
+     * @return returns a string arraylist that holds a certain thot
+     */
+    private static ArrayList<String> babyListString(ArrayList<Baby> temp){
+        ArrayList<String> ret = new ArrayList<>();
+        for(Baby baby: temp){
+            String literal = baby.strinConv();
+            ret.add(literal);
+        }
+        return ret;
+    }
     /**
      * Start of the program.
      */
@@ -135,35 +167,36 @@ public class Main {
             option.close();
             option1.close();
             ArrayList<ArrayList<Baby>> nameList = new ArrayList<ArrayList<Baby>>();
-            ArrayList<Integer> ourName = new ArrayList<Integer>();
+            ArrayList<Integer> ourName = new ArrayList<>();
             File nameDir = new File("D:/ActualDesktop/cs307/data_mw376/data/ssa_complete");
-            File[] years = nameDir.listFiles();
+            File[] years = nameDir.listFiles(new YearFileFilter());
             System.out.println(Arrays.toString(years));
             System.out.println(nameDir.isDirectory());
-            for(File year: years){
+            for(File year: years) {
                 ArrayList<Baby> tempList = new ArrayList<>();
 
-                if(year.getName().contains("yob")) {
+
 
                     Scanner s = new Scanner(year);
-                    while(s.hasNextLine()){
+                    while (s.hasNextLine()) {
                         String line = s.nextLine();
 
                         String[] babyParts = line.split(",");
-                        System.out.println(Arrays.toString(babyParts));
+
                         int freq = Integer.parseInt(babyParts[2]);
-                        Baby daBaby = new Baby(freq,babyParts[0],babyParts[1]);
+                        Baby daBaby = new Baby(freq, babyParts[0], babyParts[1]);
                         tempList.add(daBaby);
 
                     }
 
                     s.close();
-                }
-                tempList.sort(new FreqSort());
-                Collections.reverse(tempList);
-                System.out.println(tempList.toString());
-                int ourRank = rank(name,gender,tempList);
-                ourName.add(ourRank);
+
+                    tempList.sort(new FreqSort());
+                    Collections.reverse(tempList);
+                    System.out.println(babyListString(tempList));
+                    int ourRank = rank(name, gender, tempList);
+                    ourName.add(ourRank);
+
 
             }
                 int startYear = 1880;
@@ -194,7 +227,7 @@ public class Main {
                         String line = s.nextLine();
 
                         String[] babyParts = line.split(",");
-                        System.out.println(Arrays.toString(babyParts));
+
                         int freq = Integer.parseInt(babyParts[2]);
                         Baby daBaby = new Baby(freq,babyParts[0],babyParts[1]);
                         tempList.add(daBaby);
@@ -206,7 +239,7 @@ public class Main {
             }
             tempList.sort(new FreqSort());
             Collections.reverse(tempList);
-            System.out.println(tempList.toString());
+            System.out.println(babyListString(tempList));
             int ourRank = rank(name,gender,tempList);
             ArrayList<Baby> recentList = new ArrayList<>();
             for(File file:allYears){
@@ -216,7 +249,7 @@ public class Main {
                         String line = s.nextLine();
 
                         String[] babyParts = line.split(",");
-                        System.out.println(Arrays.toString(babyParts));
+
                         int freq = Integer.parseInt(babyParts[2]);
                         Baby daBaby = new Baby(freq,babyParts[0],babyParts[1]);
                         recentList.add(daBaby);
@@ -230,7 +263,12 @@ public class Main {
             int [] ranks = rankArray(name,gender,recentList);
             int matchRank = ranks[ourRank];
             Baby matchBaby = recentList.get(matchRank);
-            System.out.println(matchBaby.toString());
+            System.out.println(matchBaby.strinConv());
+
+        }
+
+
+        else if(choice == 3){
 
         }
 
