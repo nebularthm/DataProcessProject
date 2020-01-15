@@ -38,9 +38,10 @@ class Baby{
         return frequency;
     }
 }
-class YearFileFilter implements FilenameFilter{
+class YearFileFilter implements  FilenameFilter{
+    @Override
     public boolean accept(File dir, String fname){
-        return fname.matches("\\d{4}");
+        return fname.matches("(.*)[0-9]{4}(.*)");
     }
 }
 class GenderSort implements Comparator<Baby>{
@@ -62,6 +63,7 @@ class NameSort implements Comparator<Baby>{
 }
 
 class FreqSort implements  Comparator<Baby>{
+    @Override
     public int compare(Baby favorite, Baby middle){
         int favFreq = favorite.frequency;
         int midFreq = middle.frequency;
@@ -169,14 +171,16 @@ public class Main {
             ArrayList<ArrayList<Baby>> nameList = new ArrayList<ArrayList<Baby>>();
             ArrayList<Integer> ourName = new ArrayList<>();
             File nameDir = new File("D:/ActualDesktop/cs307/data_mw376/data/ssa_complete");
-            File[] years = nameDir.listFiles(new YearFileFilter());
-            System.out.println(Arrays.toString(years));
-            System.out.println(nameDir.isDirectory());
+            File[] years = nameDir.listFiles( new YearFileFilter());
+            int fileFlag = 0;
+//            System.out.println(Arrays.toString(years));
+//            System.out.println(nameDir.isDirectory());
             for(File year: years) {
                 ArrayList<Baby> tempList = new ArrayList<>();
+//                System.out.println((year.getName().matches("(.*)[0-9]{4}(.*)")));
+//                System.out.println(year.getName());
 
-
-
+                    //fileFlag = 0;
                     Scanner s = new Scanner(year);
                     while (s.hasNextLine()) {
                         String line = s.nextLine();
@@ -185,31 +189,40 @@ public class Main {
 
                         int freq = Integer.parseInt(babyParts[2]);
                         Baby daBaby = new Baby(freq, babyParts[0], babyParts[1]);
+
                         tempList.add(daBaby);
 
                     }
 
                     s.close();
-
+//                    System.out.println(tempList);
                     tempList.sort(new FreqSort());
                     Collections.reverse(tempList);
-                    System.out.println(babyListString(tempList));
+
+//                    System.out.println(babyListString(tempList));
                     int ourRank = rank(name, gender, tempList);
+//                    System.out.println(ourRank);
                     ourName.add(ourRank);
 
 
+
             }
+
+
+
                 int startYear = 1880;
-            for(int i = 0; i < ourName.size();i++){
-                System.out.printf("For year %d ", startYear);
-                System.out.printf("The rank was %d %n", ourName.get(i));
-            }
+                for (int i = 0; i < ourName.size(); i++) {
+                    System.out.printf("For year %d ", startYear);
+                    System.out.printf("The rank was %d %n", ourName.get(i));
+                    startYear++;
+                }
+
 
         }
 
         else if(choice == 2){
             Scanner option2 = new Scanner(System.in);
-            System.out.println("Thank you for choosing option 1, please enter your desired name:");
+            System.out.println("Thank you for choosing option 2, please enter your desired name:");
             String name = option2.nextLine();
             System.out.println("Now enter the gender/sex of your baby:");
             String gender = option2.nextLine();
@@ -218,7 +231,7 @@ public class Main {
             option.close();
             option2.close();
             File targetYear = new File("D:/ActualDesktop/cs307/data_mw376/data/ssa_complete");
-            File [] allYears = targetYear.listFiles();
+            File [] allYears = targetYear.listFiles( new YearFileFilter());
             ArrayList<Baby> tempList = new ArrayList<>();
             for(File file :allYears ){
                 if(file.getName().contains(year)){
@@ -269,6 +282,18 @@ public class Main {
 
 
         else if(choice == 3){
+            Scanner option3 = new Scanner(System.in);
+            System.out.println("Thank you for choosing option 3, please enter desired start year:");
+            String startYear = option3.nextLine();
+            System.out.println("Now enter the gender/sex of your baby:");
+            String endYear = option3.nextLine();
+            System.out.println("Now enter the year of this name:");
+            String gender = option3.nextLine();
+            option.close();
+            option3.close();
+            File targetYear = new File("D:/ActualDesktop/cs307/data_mw376/data/ssa_complete");
+            File [] allYears = targetYear.listFiles();
+            ArrayList<Baby> topName = new ArrayList<>();
 
         }
 
