@@ -18,6 +18,13 @@ class Baby{
     int frequency;
     String name;
     String gender;
+
+    /**
+     * This constructor creates a Baby object, which holds the name, gender, and frequency for a particular baby. This class can be modified further to also store the meaning for a baby
+     * @param freq the frequency of this baby name
+     * @param nam the actual baby name
+     * @param gen the gender of this baby name
+     */
     public Baby(int freq, String nam, String gen){
         this.frequency = freq;
         this.name = nam;
@@ -38,6 +45,10 @@ class Baby{
         return frequency;
     }
 }
+
+/**
+ * This class is used to filter out files so that only files that contain 4 digit years are read in, this prevents reading in README's
+ */
 class YearFileFilter implements  FilenameFilter{
     @Override
     public boolean accept(File dir, String fname){
@@ -62,6 +73,9 @@ class NameSort implements Comparator<Baby>{
     }
 }
 
+/**
+ * This class is used to sort baby names based on thier frequency, this is useful just in case the data does not come in pre-sorted
+ */
 class FreqSort implements  Comparator<Baby>{
     @Override
     public int compare(Baby favorite, Baby middle){
@@ -81,13 +95,23 @@ class FreqSort implements  Comparator<Baby>{
 }
 public class Main {
     final static String endYear = "2017";
+
     /**
-     *This method returns the given
-     * @param name
-     * @param gender
-     * @param temp
-     * @return
+     *
+     * @param fname either a filename or a string representation of a year
+     * @return integer represenation of a year
      */
+    private static int convertYear(String fname){
+        return Integer.parseInt(fname.replaceAll("\\D", ""));
+    }
+    /**
+     *This method returns the rank of the given name and gender
+     * @param name represents the baby name that we are trying to rank
+     * @param gender gender for the baby name
+     * @param temp the list of possible baby names
+     * @return an int that is the rank of our baby name
+     */
+
     private static int rank(String name, String gender, ArrayList<Baby> temp){
         int ret = 0;
         int nameIndex = findName(name,gender,temp);
@@ -108,6 +132,14 @@ public class Main {
         ret = ranks[nameIndex];
         return ret;
     }
+
+    /**
+     * This method creates a  rank array that provides a ranking at an index that corresponds to a name in the babyList
+     * @param name name of interest
+     * @param gender desired gender
+     * @param temp list of baby objects
+     * @return
+     */
     private static int[] rankArray(String name, String gender,ArrayList<Baby> temp){
         int nameIndex = findName(name,gender,temp);
         int [] ranks = new int[temp.size()];
@@ -126,6 +158,14 @@ public class Main {
         }
         return ranks;
     }
+
+    /**
+     *
+     * @param name name of interest
+     * @param gender  gendr of said name
+     * @param temp list of baby objects
+     * @return returns the index of a partciular name
+     */
     private static int findName(String name, String gender, ArrayList<Baby> temp){
         for(Baby babe:temp){
             if(babe.name.equals(name) && babe.gender.equals(gender)){
@@ -172,15 +212,10 @@ public class Main {
             ArrayList<Integer> ourName = new ArrayList<>();
             File nameDir = new File("D:/ActualDesktop/cs307/data_mw376/data/ssa_complete");
             File[] years = nameDir.listFiles( new YearFileFilter());
-            int fileFlag = 0;
-//            System.out.println(Arrays.toString(years));
-//            System.out.println(nameDir.isDirectory());
+
             for(File year: years) {
                 ArrayList<Baby> tempList = new ArrayList<>();
-//                System.out.println((year.getName().matches("(.*)[0-9]{4}(.*)")));
-//                System.out.println(year.getName());
 
-                    //fileFlag = 0;
                     Scanner s = new Scanner(year);
                     while (s.hasNextLine()) {
                         String line = s.nextLine();
@@ -195,13 +230,13 @@ public class Main {
                     }
 
                     s.close();
-//                    System.out.println(tempList);
+//
                     tempList.sort(new FreqSort());
                     Collections.reverse(tempList);
 
-//                    System.out.println(babyListString(tempList));
+//
                     int ourRank = rank(name, gender, tempList);
-//                    System.out.println(ourRank);
+//
                     ourName.add(ourRank);
 
 
@@ -285,17 +320,68 @@ public class Main {
             Scanner option3 = new Scanner(System.in);
             System.out.println("Thank you for choosing option 3, please enter desired start year:");
             String startYear = option3.nextLine();
-            System.out.println("Now enter the gender/sex of your baby:");
+            System.out.println("Now enter the end year:");
             String endYear = option3.nextLine();
-            System.out.println("Now enter the year of this name:");
+            System.out.println("Now enter the gender of interest:");
             String gender = option3.nextLine();
             option.close();
             option3.close();
             File targetYear = new File("D:/ActualDesktop/cs307/data_mw376/data/ssa_complete");
-            File [] allYears = targetYear.listFiles();
+            File [] allYears = targetYear.listFiles(new YearFileFilter());
             ArrayList<Baby> topName = new ArrayList<>();
+            int lowerYear = convertYear(startYear);
+            int upperyear = convertYear(endYear);
+            for(File year: allYears){
+                int thisYear = convertYear(year.getName());
+                ArrayList<Baby> tempList = new ArrayList<>();
+                if( lowerYear<= thisYear && thisYear <= upperyear){
+
+
+
+
+                    Scanner s = new Scanner(year);
+                    while (s.hasNextLine()) {
+                        String line = s.nextLine();
+
+                        String[] babyParts = line.split(",");
+
+                        int freq = Integer.parseInt(babyParts[2]);
+                        Baby daBaby = new Baby(freq, babyParts[0], babyParts[1]);
+
+                        tempList.add(daBaby);
+
+                    }
+
+                    s.close();
+
+                    tempList.sort(new FreqSort());
+                    Collections.reverse(tempList);
+                }
+                for(Baby name:tempList){
+                    if(name.getGender().equals(gender)){
+                        topName.add(name);
+                        break;
+                    }
+                }
+            }
+            System.out.println(babyListString(topName));
 
         }
-
+    else if(choice == 4){
+            Scanner option3 = new Scanner(System.in);
+            System.out.println("Thank you for choosing option 3, please enter desired start year:");
+            String startYear = option3.nextLine();
+            System.out.println("Now enter the end year:");
+            String endYear = option3.nextLine();
+            System.out.println("Now enter the gender of interest:");
+            String gender = option3.nextLine();
+            option.close();
+            option3.close();
+            File targetYear = new File("D:/ActualDesktop/cs307/data_mw376/data/ssa_complete");
+            File [] allYears = targetYear.listFiles(new YearFileFilter());
+            ArrayList<Baby> topName = new ArrayList<>();
+            int lowerYear = convertYear(startYear);
+            int upperyear = convertYear(endYear);
+        }
     }
 }
