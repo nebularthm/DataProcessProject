@@ -33,6 +33,8 @@ Main class: Main is the main class, the main method calls all of the other class
 Simply Run main, and modify the name, gender, start year, endyear, and fname depending on the question that you want to answer
 
 
+Within the main class, the methods allRanks() answers question 1, sameRank answers question 2, commonNameRange answers question 3, commonLetterRange answers question 4
+
 
 Data files needed: 
 Have a local directory in the data folder called "ssa_complete", and within that directory make sure that you have Census files that contain a 4 digit contiguous year,
