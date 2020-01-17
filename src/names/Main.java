@@ -1,9 +1,5 @@
 package names;
 
-/**
- * Feel free to completely change this code or delete it entirely. 
- */
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
@@ -75,17 +71,9 @@ class NameSort implements Comparator<Baby>{
 class FreqSort implements  Comparator<Baby>{
     @Override
     public int compare(Baby favorite, Baby middle){
-        int favFreq = favorite.frequency;
-        int midFreq = middle.frequency;
-        if(favFreq == midFreq){
-            return 0;
-        }
-        else if(favFreq > midFreq){
-            return  1;
-        }
-        else{
-            return -1;
-        }
+        int favFreq = favorite.getFrequency();
+        int midFreq = middle.getFrequency();
+        return Integer.compare(favFreq, midFreq);
 
     }//Sorts by frequencyor coungt of a given baby name, just in case the names themselves are not sorted. Not necessary for basics, but good for the future
 }
@@ -110,7 +98,7 @@ public class Main {
      * @return an int that is the rank of our baby name
      */
 
-    private static int rank(String name, String gender, ArrayList<Baby> temp){
+    private static int babyNameRank(String name, String gender, ArrayList<Baby> temp){
         int nameIndex = findName(name,gender,temp); // find the index of our name in the original baby array list
         int [] ranks = new int[temp.size()];//the rank array
         ranks[0] = 1;// the first rank will always be 1
@@ -169,12 +157,12 @@ public class Main {
 
     /**
      * This method returns the proper string representation of a list of baby names
-     * @param temp
+     * @param babyList an arrayList of babies
      * @return returns a string arraylist that holds a certain thot
      */
-    public static ArrayList<String> babyListString(ArrayList<Baby> temp){
+    public static ArrayList<String> babyListToString(ArrayList<Baby> babyList){
         ArrayList<String> ret = new ArrayList<>();
-        for(Baby baby: temp){
+        for(Baby baby: babyList){
             String literal = baby.strinConv();
             ret.add(literal);
         }
@@ -183,43 +171,44 @@ public class Main {
 
     /**
      * this method reads in a file and puts all the baby names from that file into a stucture that stores Baby objects
-     * @param year
-     * @param tempList
-     * @throws FileNotFoundException
+     * @param year represents the year in file
+     * @param babyList holds list of babies
+     * @throws FileNotFoundException in case we don't have hte file
      */
-    public static void updateBabyList(File year, ArrayList<Baby> tempList) throws FileNotFoundException {
-        Scanner s = new Scanner(year);
-        while (s.hasNextLine()) {
-            String line = s.nextLine();
-            String[] babyParts = line.split(",");
+    public static void updateBabyList(File year, ArrayList<Baby> babyList) throws FileNotFoundException {
+        Scanner yearFile = new Scanner(year);
+        while (yearFile.hasNextLine()) {
+            String nameLine = yearFile.nextLine();
+            String[] babyParts = nameLine.split(",");
             int freq = Integer.parseInt(babyParts[2]);
             Baby daBaby = new Baby(freq, babyParts[0], babyParts[1]);
-            tempList.add(daBaby);
+            babyList.add(daBaby);
 
         }
 
-        s.close();
+        yearFile.close();
     }
 
     /**
      *
-     * @param name
-     * @param gender
-     * @param fname
+     * @param name name of the baby
+     * @param gender gender of the baby
+     * @param fname name of our file
      * @return returns a list that contains the ranks of this name through the years
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException in case w edon't have the file
      */
     public static ArrayList<Integer> allRanks(String name, String gender, String fname) throws FileNotFoundException {
         ArrayList<Integer> ourName = new ArrayList<>();
         File nameDir = new File(fname);
         File[] years = nameDir.listFiles( new YearFileFilter());
 
+        assert years != null;
         for(File year: years) {
             ArrayList<Baby> tempList = new ArrayList<>();
             updateBabyList(year, tempList);
             tempList.sort(new FreqSort());
             Collections.reverse(tempList);// get descending order
-            int ourRank = rank(name, gender, tempList);// get the rank fro this year
+            int ourRank = babyNameRank(name, gender, tempList);// get the rank fro this year
             ourName.add(ourRank);
         }
         return ourName;
@@ -227,17 +216,18 @@ public class Main {
 
     /**
      *
-     * @param name
-     * @param gender
-     * @param year
-     * @param fname
+     * @param name baby name
+     * @param gender baby gender
+     * @param year year we are interested in
+     * @param fname name of directory
      * @return Returns a baby that has the same rank as the one provided
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException in case we don't find the file
      */
     public static Baby sameRank(String name, String gender, String year, String fname ) throws FileNotFoundException {
         File targetYear = new File(fname);
         File [] allYears = targetYear.listFiles( new YearFileFilter());
         ArrayList<Baby> tempList = new ArrayList<>();
+        assert allYears != null;
         for(File file :allYears ){
             if(file.getName().contains(year)){
                 updateBabyList(file,tempList);
@@ -248,7 +238,7 @@ public class Main {
 
         tempList.sort(new FreqSort());
         Collections.reverse(tempList);
-        int ourRank = rank(name,gender,tempList);
+        int ourRank = babyNameRank(name,gender,tempList);
         ArrayList<Baby> recentList = new ArrayList<>();
         for(File file:allYears){
             if(file.getName().contains(endYear)){
@@ -259,27 +249,24 @@ public class Main {
         recentList.sort(new FreqSort());
         Collections.reverse(recentList);
         int [] ranks = rankArray(name,gender,recentList);
-        int matchRank = 0;
         int matchIndex = 0;
         for(int i = 0; i < ranks.length;i++){
-            if(ranks[i] == ourRank){ // this block does not check for the same gender as that is not the goal of this question
-                matchRank = ranks[i];
+            if(ranks[i] == ourRank){ // this block does not check for the same gender as that is not the goal of this questio
                 matchIndex = i;
                 break;
             }
         }
-        Baby matchBaby = recentList.get(matchIndex);
-        return matchBaby;
+        return recentList.get(matchIndex);
     }
 
     /**
      *
-     * @param startYear
-     * @param endYear
-     * @param gender
-     * @param fname
+     * @param startYear start of range
+     * @param endYear end of range
+     * @param gender gender of interest
+     * @param fname name of the file of interest
      * @return returns an arrayList of the most popular name(s) over this time period, in he actual main method this list will be parsed to find the most popular name(s) over that span
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException in case we don't find the file
      */
     public static ArrayList<Baby> commonNameRange(String startYear, String endYear, String gender ,String fname) throws FileNotFoundException {
         File targetYear = new File(fname);
@@ -287,6 +274,7 @@ public class Main {
         ArrayList<Baby> topName = new ArrayList<>();
         int lowerYear = convertYear(startYear);
         int upperyear = convertYear(endYear);
+        assert allYears != null;
         for(File year: allYears){
             int thisYear = convertYear(year.getName());
             ArrayList<Baby> tempList = new ArrayList<>();
@@ -309,11 +297,11 @@ public class Main {
     /**
      *
      * @param startYear The beginning and end of the r
-     * @param endYear
+     * @param endYear end of the range
      * @param gender Gender of interest, lets you switch between displaying most popular  names for not just girls, but boys as well
      * @param fname path to the directory that holds all of these diles
-     * @return
-     * @throws FileNotFoundException
+     * @return returns an arraylist of all the baby names that start with the most common letter
+     * @throws FileNotFoundException in case we don't find the file
      */
     public static ArrayList<Baby> commonLetterRange(String startYear, String endYear, String gender,String fname) throws FileNotFoundException {
         ArrayList<Baby> topNames = commonNameRange(startYear,endYear,gender,fname);
@@ -322,7 +310,7 @@ public class Main {
         for(Baby babe:topNames){
             startingChars.add(babe.getName().substring(0,1));
         }
-        int maxStart = -10000;
+        int maxStart = -10000;//this index objectively won't exist
         String maxStartingChar = "";
         for(String chara: startingChars){
             if(!seenChar.contains(chara)){
@@ -338,12 +326,13 @@ public class Main {
         File targetYear = new File(fname);
         File [] allYears = targetYear.listFiles( new YearFileFilter());
         ArrayList<Baby> keptList = new ArrayList<>();
+        assert allYears != null;
         for(File file :allYears ){
             ArrayList<Baby> tempList = new ArrayList<>();
             int bounds = convertYear(file.getName());
-            int lower = convertYear(startYear);
-            int upper = convertYear(endYear);
-                if(lower <= bounds && bounds <= upper) {
+            int lowerYear = convertYear(startYear);
+            int upperYear = convertYear(endYear);
+                if(lowerYear <= bounds && bounds <= upperYear) {
                     updateBabyList(file, tempList);
                     for (Baby babe : tempList) {
                         if (babe.getName().startsWith(maxStartingChar) && babe.getGender().equals(gender)) {
@@ -360,11 +349,11 @@ public class Main {
 
     /**
      * This method simply prints the counts of the most popular baby names over a certain time frame
-     * @param babies
+     * @param babies list of babies
      */
     public static void topBabyFreq(ArrayList<Baby> babies){
         HashMap<String,Integer> babyFreq = new HashMap<>();
-        ArrayList<String> babyNames = babyListString(babies);
+        ArrayList<String> babyNames = babyListToString(babies);
         for(String babe:babyNames){
             babyFreq.putIfAbsent(babe,Collections.frequency(babyNames,babe));
         }
@@ -385,9 +374,9 @@ public class Main {
             String fname = "data/ssa_complete";
             ArrayList<Integer> allNameRanks = allRanks(name,gender,fname);
         int start = convertYear(START);
-        for (int i = 0; i < allNameRanks.size(); i++) {
+        for (Integer allNameRank : allNameRanks) {
             System.out.printf("For year %d ", start);
-            System.out.printf("The rank was %d", allNameRanks.get(i));
+            System.out.printf("The rank was %d", allNameRank);
             System.out.printf(" for name %s%n", name);
             start++;
         }
@@ -396,6 +385,6 @@ public class Main {
             ArrayList<Baby> topNames = commonNameRange(startYear, endYear, gender,fname);
         topBabyFreq(topNames);
             ArrayList<Baby> allNameStartWith = commonLetterRange(startYear,endYear,gender,fname);
-        System.out.println(babyListString(allNameStartWith));
+        System.out.println(babyListToString(allNameStartWith));
     }
 }
