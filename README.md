@@ -10,9 +10,9 @@ Name:  Michael Williams
 
 Start Date:  1/12/2020
 
-Finish Date: 
+Finish Date: 1/16/2020
 
-Hours Spent:
+Hours Spent: 10
 
 ### Resources Used
 
@@ -32,11 +32,15 @@ http://www.avajava.com/tutorials/lessons/how-do-i-use-a-filenamefilter-to-displa
 Main class: Main is the main class, the main method calls all of the other classes/methods
 Simply Run main, and modify the name, gender, start year, endyear, and fname depending on the question that you want to answer
 
+
+
 Data files needed: 
 Have a local directory in the data folder called "ssa_complete", and within that directory make sure that you have Census files that contain a 4 digit contiguous year,
 for instance you can have files that are called yob1993.txt, boy1993.txt, girl1993.txt, so long as there is a 4 digit string that corresponds to the year somewhere in the file name
 
 For testing, the test files in the tests directory in the data folder provide very simple test cases where Helen is the most popular Girl's name, with the highest rank, and as such was very easy to test
+
+Files in this program are accessed by a relative path from the data directory, so when cloning this project make sure to have the src and data folders
 Key/Mouse inputs:
 
 Cheat keys:
@@ -48,7 +52,14 @@ Extra credit:
 
 
 ### Notes/Assumptions
+Assumptions made are that all files that this program will access can be relatively/locally pathed to from the data folder
+This program does not make the assumption that this data is sorted becuase this program automatically sorts baby names by thier frequency
+
+This program assumes that all files that this program uses will contain a 4 digit year in the file name, otherwise this file will not work, so stick to a yearly naming scheme
+
+This program assumes that the order of the files is sorted chronologically however
+
 
 
 ### Impressions~~~~
-
+This assignment was really fun, using interfaces like FileNameFilter that I do not normally use was prety fun. Also making design optimizations is interesting as seeing how "small I can go" is interesting. 
