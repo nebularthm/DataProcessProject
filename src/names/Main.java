@@ -353,17 +353,26 @@ public class Main {
         }
         File targetYear = new File(fname);
         File [] allYears = targetYear.listFiles( new YearFileFilter());
-        ArrayList<Baby> tempList = new ArrayList<>();
-        ArrayList<Baby> keptList = new ArrayList<>();
-        for(File file :allYears ){
 
-                updateBabyList(file,tempList);
-                for(Baby babe:tempList){
-                    if(babe.getName().startsWith(maxStartingChar) && babe.getGender().equals(gender)){
-                        keptList.add(babe);
+        ArrayList<Baby> keptList = new ArrayList<>();
+
+        for(File file :allYears ){
+            ArrayList<Baby> tempList = new ArrayList<>();
+            int bounds = convertYear(file.getName());
+            int lower = convertYear(startYear);
+            int upper = convertYear(endYear);
+                if(lower <= bounds && bounds <= upper) {
+
+                    updateBabyList(file, tempList);
+                    for (Baby babe : tempList) {
+                        if (babe.getName().startsWith(maxStartingChar) && babe.getGender().equals(gender)) {
+                            keptList.add(babe);
+                        }
                     }
+
                 }
         }
+
         return keptList;
 
     }
