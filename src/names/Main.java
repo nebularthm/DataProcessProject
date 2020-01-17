@@ -92,6 +92,8 @@ class FreqSort implements  Comparator<Baby>{
 public class Main {
     final static String endYear = "2017";
     final static String START = "1880";
+    final static String male = "M";
+    final static String female = "F";
     /**
      *
      * @param fname either a filename or a string representation of a year
@@ -113,9 +115,9 @@ public class Main {
         int [] ranks = new int[temp.size()];//the rank array
         ranks[0] = 1;// the first rank will always be 1
         for(int i = 1; i < ranks.length; i++){// iterate through ranks array and update
-            Baby secon = temp.get(i-1);//get previous rank
-            Baby first = temp.get(i);// get current rank
-            if(first.getFrequency() != secon.getFrequency()){
+            Baby prev = temp.get(i-1);//get previous rank
+            Baby curr = temp.get(i);// get current rank
+            if(curr.getFrequency() != prev.getFrequency()){
                 ranks[i] = i + 1;  //if these two baby objects have different frequency, then the current object must have a lower rank, so increment
             }
             else {
@@ -136,10 +138,10 @@ public class Main {
 
         ranks[0] = 1;
         for(int i = 1; i < ranks.length; i++){
-            Baby first = temp.get(i);
-            Baby secon = temp.get(i-1);
+            Baby curr = temp.get(i);//current baby
+            Baby prev = temp.get(i-1);
 
-            if(first.frequency != secon.frequency){
+            if(curr.getFrequency() != prev.getFrequency()){
                 ranks[i] = i + 1;  //if these two baby objects have different frequency, then the current object must have a lower rank, so increment
             }
             else {
@@ -158,7 +160,7 @@ public class Main {
      */
     private static int findName(String name, String gender, ArrayList<Baby> temp){
         for(Baby babe:temp){
-            if(babe.name.equals(name) && babe.gender.equals(gender)){
+            if(babe.getName().equals(name) && babe.getGender().equals(gender)){
                 return temp.indexOf(babe); //if the name and gender are the same , this this name must be our name
             }
         }
@@ -208,7 +210,6 @@ public class Main {
      * @throws FileNotFoundException
      */
     public static ArrayList<Integer> allRanks(String name, String gender, String fname) throws FileNotFoundException {
-        ArrayList<ArrayList<Baby>> nameList = new ArrayList<ArrayList<Baby>>();
         ArrayList<Integer> ourName = new ArrayList<>();
         File nameDir = new File(fname);
         File[] years = nameDir.listFiles( new YearFileFilter());
@@ -378,7 +379,7 @@ public class Main {
      */
     public static void main (String[] args) throws FileNotFoundException {
             String name = "Helen";//these values are just for me to test main on the real dataset
-            String gender = "F";
+            String gender = female;
             String startYear = "1990";
             String endYear = "2001";
             String fname = "data/ssa_complete";
