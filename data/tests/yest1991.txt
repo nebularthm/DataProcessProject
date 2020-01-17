@@ -1,0 +1,4 @@
+Helen,F,100000
+Henry,M,10000
+Harriet,F,28
+Hunter,M,20

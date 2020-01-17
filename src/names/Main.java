@@ -177,7 +177,7 @@ public class Main {
      * @param temp
      * @return returns a string arraylist that holds a certain thot
      */
-    private static ArrayList<String> babyListString(ArrayList<Baby> temp){
+    public static ArrayList<String> babyListString(ArrayList<Baby> temp){
         ArrayList<String> ret = new ArrayList<>();
         for(Baby baby: temp){
             String literal = baby.strinConv();
@@ -277,7 +277,7 @@ public class Main {
         int matchRank = 0;
         int matchIndex = 0;
         for(int i = 0; i < ranks.length;i++){
-            if(ranks[i] == ourRank){
+            if(ranks[i] == ourRank){ // this block does not check for the same gender as that is not the goal of this question
                 matchRank = ranks[i];
                 matchIndex = i;
                 break;
