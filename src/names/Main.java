@@ -272,10 +272,19 @@ public class Main {
             }
         }
         recentList.sort(new FreqSort());
-        Collections.reverse(tempList);
+        Collections.reverse(recentList);
         int [] ranks = rankArray(name,gender,recentList);
-        int matchRank = ranks[ourRank];
-        Baby matchBaby = recentList.get(matchRank);
+        int matchRank = 0;
+        int matchIndex = 0;
+        for(int i = 0; i < ranks.length;i++){
+            if(ranks[i] == ourRank){
+                matchRank = ranks[i];
+                matchIndex = i;
+                break;
+            }
+        }
+        Baby matchBaby = recentList.get(matchIndex);
+
         return matchBaby;
     }
 
@@ -367,7 +376,7 @@ public class Main {
             String gender = "F";
             String startYear = "1990";
             String endYear = "2001";
-            String fname = "D:/ActualDesktop/cs307/data_mw376/data/ssa_complete";
+            String fname = "data/ssa_complete";
             ArrayList<Integer> allNameRanks = allRanks(name,gender,fname);
         System.out.println(allNameRanks.toString());
             Baby justAsGood = sameRank(name,gender, startYear,fname);
