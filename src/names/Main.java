@@ -190,6 +190,37 @@ public class Main {
     }
 
     /**
+     * This method returns the ranks for this name for a given range of yyears, this is an advanced version of the allRanks method
+     * @param name baby name
+     * @param gender gender of the baby
+     * @param startYear start of the year  range
+     * @param endYear  end of the year range
+     * @param fname     the file path/ URL for the directory of babyNames
+     * @return
+     * @throws FileNotFoundException
+     */
+    public static ArrayList<Integer> ranksRange(String name, String gender, String startYear, String endYear, String fname) throws FileNotFoundException{
+        ArrayList<Integer> ourName = new ArrayList<>();
+        File nameDir = new File(fname);
+        File[] years = nameDir.listFiles( new YearFileFilter());
+        int lowerYear = convertYear(startYear);
+        int upperyear = convertYear(endYear);
+        assert years != null;
+        for(File year: years) {
+            int thisYear = convertYear(year.getName());
+            if (lowerYear <= thisYear && thisYear <= upperyear) { //inclusive range check
+                ArrayList<Baby> tempList = new ArrayList<>();
+                updateBabyList(year, tempList);
+                tempList.sort(new FreqSort());
+                Collections.reverse(tempList);// get descending order
+                int ourRank = babyNameRank(name, gender, tempList);// get the rank fro this year
+                ourName.add(ourRank);
+            }
+        }
+        return ourName;
+    }
+
+    /**
      *
      * @param name name of the baby
      * @param gender gender of the baby
@@ -213,6 +244,7 @@ public class Main {
         }
         return ourName;
     }
+
 
     /**
      *
