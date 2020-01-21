@@ -3,6 +3,7 @@ package names;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
+import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -90,6 +91,15 @@ public class Main {
     private static int convertYear(String fname){
         return Integer.parseInt(fname.replaceAll("\\D", ""));
     }
+    private static boolean validName(String name, String gender, ArrayList<Baby> babyList){
+
+        for(Baby babe: babyList){
+            if(babe.getGender().equals(gender) && babe.getName().equals(name)){
+                return true;
+            }
+        }
+        return false;
+    }
     /**
      *This method returns the rank of the given name and gender
      * @param name represents the baby name that we are trying to rank
@@ -100,6 +110,9 @@ public class Main {
 
     private static int babyNameRank(String name, String gender, ArrayList<Baby> temp){
         int nameIndex = findName(name,gender,temp); // find the index of our name in the original baby array list
+        if(!validName(name,gender,temp)){
+            return 0;
+        }
         int [] ranks = new int[temp.size()];//the rank array
         ranks[0] = 1;// the first rank will always be 1
         for(int i = 1; i < ranks.length; i++){// iterate through ranks array and update
@@ -188,7 +201,28 @@ public class Main {
 
         yearFile.close();
     }
-
+    public static ArrayList<Integer> ranksRangeNoGender(String name, String startYear, String endYear, String fname) throws FileNotFoundException{
+        ArrayList<Integer> ourName = new ArrayList<>();
+        File nameDir = new File(fname);
+        File[] years = nameDir.listFiles( new YearFileFilter());
+        int lowerYear = convertYear(startYear);
+        int upperyear = convertYear(endYear);
+        assert years != null;
+        for(File year: years) {
+            int thisYear = convertYear(year.getName());
+            if (lowerYear <= thisYear && thisYear <= upperyear) { //inclusive range check
+                ArrayList<Baby> tempList = new ArrayList<>();
+                updateBabyList(year, tempList);
+                tempList.sort(new FreqSort());
+                Collections.reverse(tempList);// get descending order
+                int ourRank = babyNameRank(name, male, tempList);// get the rank fro this year
+                int ourSecondRank = babyNameRank(name,female,tempList);
+                ourName.add(ourRank);
+                ourName.add(ourSecondRank);
+            }
+        }
+        return ourName;
+    }
     /**
      * This method returns the ranks for this name for a given range of yyears, this is an advanced version of the allRanks method
      * @param name baby name
@@ -218,6 +252,21 @@ public class Main {
             }
         }
         return ourName;
+    }
+
+    public static int averageRank(String name, String gender, String startYear, String endYear, String fname) throws FileNotFoundException {
+        int sum = 0;
+        ArrayList<Integer> ranks;
+        if(gender != null) {
+          ranks = ranksRange(name, gender, startYear, endYear, fname);
+        }
+        else{
+             ranks = ranksRangeNoGender(name,startYear,endYear,fname);
+        }
+        for(int rank:ranks){
+            sum += rank;
+        }
+        return sum / ranks.size();
     }
 
     /**
