@@ -1,9 +1,8 @@
 package names;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
+import java.io.*;
 import java.lang.reflect.Array;
+import java.net.*;
 import java.util.*;
 
 /**
@@ -83,6 +82,22 @@ public class Main {
     final static String START = "1880";
     final static String male = "M";
     final static String female = "F";
+    final static  String siteURL = "https://www2.cs.duke.edu/courses/spring20/compsci307d/assign/01_data/data/ssa_complete/";
+
+    public static int urlReader(String url) throws IOException {
+        URL nameSite = new URL(url);
+        ArrayList<String> siteLines = new ArrayList<>();
+        BufferedReader siteReader = new BufferedReader(new InputStreamReader(nameSite.openConnection().getInputStream()));
+        String siteLine = "";
+        while((siteLine = siteReader.readLine()) != null){
+            if(siteLine.contains("href=\"yob")){
+                siteLines.add(siteLine);
+            }
+        }
+        siteReader.close();
+        System.out.println(siteLines);
+        return 1;
+    }
     /**
      *
      * @param fname either a filename or a string representation of a year
@@ -100,7 +115,7 @@ public class Main {
         }
         return false;
     }
-    public static Baby mostVolatile(String startYear, String endYear, String fname) throws FileNotFoundException {
+    public static String mostVolatile(String startYear, String endYear, String fname) throws FileNotFoundException {
         File nameDir = new File(fname);
         File[] years = nameDir.listFiles( new YearFileFilter());
         int lowerYear = convertYear(startYear);
@@ -121,7 +136,7 @@ public class Main {
             int thisRankChange = firstLastDiff(babe.getName(),babe.getGender(),startYear,endYear,fname);
             rankChangeList.add(Math.abs(thisRankChange));
         }
-        return startList.get(rankChangeList.indexOf(Collections.max(rankChangeList)));
+        return startList.get(rankChangeList.indexOf(Collections.max(rankChangeList))).getName();
     }
     public static int firstLastDiff(String name, String gender, String startYear, String endYear,String fname) throws FileNotFoundException{
         File nameDir = new File(fname);

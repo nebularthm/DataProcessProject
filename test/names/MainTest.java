@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static names.Main.*;
@@ -94,6 +95,10 @@ public class MainTest {
         Assert.assertEquals(babyListToString(commonLetterTester), babyListToString(commonLetterMethod));//compare the contents of both lists
 
 
+    }
+    @Test
+    public void testURL() throws IOException{
+        Assert.assertEquals(1,urlReader("https://www2.cs.duke.edu/courses/spring20/compsci307d/assign/01_data/data/ssa_complete/"));
     }
 
 
