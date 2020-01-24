@@ -100,6 +100,34 @@ public class Main {
         }
         return false;
     }
+    public static int firstLastDiff(String name, String gender, String startYear, String endYear,String fname) throws FileNotFoundException{
+        File nameDir = new File(fname);
+        File[] years = nameDir.listFiles( new YearFileFilter());
+        int lowerYear = convertYear(startYear);
+        int upperyear = convertYear(endYear);
+        int startRank = 0;
+        int endRank = 0;
+        assert years != null;
+        for(File year: years) {
+            int thisYear = convertYear(year.getName());
+            if (thisYear == lowerYear) { //inclusive range check
+                ArrayList<Baby> tempList = new ArrayList<>();
+                updateBabyList(year, tempList);
+                tempList.sort(new FreqSort());
+                Collections.reverse(tempList);// get descending order
+                startRank = babyNameRank(name, gender, tempList);// get the rank fro this year
+            }
+            else if(thisYear == upperyear){
+                ArrayList<Baby> tempList = new ArrayList<>();
+                updateBabyList(year, tempList);
+                tempList.sort(new FreqSort());
+                Collections.reverse(tempList);// get descending order
+                endRank = babyNameRank(name,gender,tempList);
+                break;
+            }
+        }
+        return startRank - endRank;
+    }
     public static ArrayList<Integer> recentRanks(String name, int numYears, String fname) throws FileNotFoundException{
         ArrayList<Integer> ourName = new ArrayList<>();
         File nameDir = new File(fname);
