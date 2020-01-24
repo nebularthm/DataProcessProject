@@ -100,6 +100,29 @@ public class Main {
         }
         return false;
     }
+    public static Baby mostVolatile(String startYear, String endYear, String fname) throws FileNotFoundException {
+        File nameDir = new File(fname);
+        File[] years = nameDir.listFiles( new YearFileFilter());
+        int lowerYear = convertYear(startYear);
+        int upperyear = convertYear(endYear);
+        ArrayList<Baby> startList = new ArrayList<>();
+        ArrayList<Integer> rankChangeList = new ArrayList<>();
+        assert years != null;
+        for(File year: years) {
+            int thisYear = convertYear(year.getName());
+            if (thisYear == lowerYear) { //inclusive range check
+                updateBabyList(year, startList);
+                startList.sort(new FreqSort());
+                Collections.reverse(startList);// get descending order
+                break;
+            }
+        }
+        for(Baby babe: startList){
+            int thisRankChange = firstLastDiff(babe.getName(),babe.getGender(),startYear,endYear,fname);
+            rankChangeList.add(Math.abs(thisRankChange));
+        }
+        return startList.get(rankChangeList.indexOf(Collections.max(rankChangeList)));
+    }
     public static int firstLastDiff(String name, String gender, String startYear, String endYear,String fname) throws FileNotFoundException{
         File nameDir = new File(fname);
         File[] years = nameDir.listFiles( new YearFileFilter());
