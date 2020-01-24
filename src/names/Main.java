@@ -100,6 +100,29 @@ public class Main {
         }
         return false;
     }
+    public static ArrayList<Integer> recentRanks(String name, int numYears, String fname) throws FileNotFoundException{
+        ArrayList<Integer> ourName = new ArrayList<>();
+        File nameDir = new File(fname);
+        File[] temp = nameDir.listFiles( new YearFileFilter());
+        File [] years = new File[numYears];
+        int counter = 0;
+        for(int i = temp.length - numYears; i < temp.length; i++){
+            years[counter] = temp[i];
+            counter +=1;
+        }
+        assert years != null;
+        for(File year: years) {
+            ArrayList<Baby> tempList = new ArrayList<>();
+            updateBabyList(year, tempList);
+            tempList.sort(new FreqSort());
+            Collections.reverse(tempList);// get descending order
+            int ourRank = babyNameRank(name, male, tempList);// get the rank fro this year
+            int ourSecondRank = babyNameRank(name,female,tempList);
+            ourName.add(ourRank);
+            ourName.add(ourSecondRank);
+        }
+        return ourName;
+    }
     /**
      *This method returns the rank of the given name and gender
      * @param name represents the baby name that we are trying to rank
@@ -254,15 +277,8 @@ public class Main {
         return ourName;
     }
 
-    public static int averageRank(String name, String gender, String startYear, String endYear, String fname) throws FileNotFoundException {
+    public static int averageRank(ArrayList<Integer> ranks) throws FileNotFoundException {
         int sum = 0;
-        ArrayList<Integer> ranks;
-        if(gender != null) {
-          ranks = ranksRange(name, gender, startYear, endYear, fname);
-        }
-        else{
-             ranks = ranksRangeNoGender(name,startYear,endYear,fname);
-        }
         for(int rank:ranks){
             sum += rank;
         }
