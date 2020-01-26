@@ -83,6 +83,58 @@ public class Main {
     final static String male = "M";
     final static String female = "F";
     final static  String siteURL = "https://www2.cs.duke.edu/courses/spring20/compsci307d/assign/01_data/data/ssa_complete/";
+
+    public static ArrayList<String>  meaningList() throws IOException {
+        URL nameSite = new URL(siteURL);
+        ArrayList<String> siteLines = new ArrayList<>();
+        BufferedReader siteReader = new BufferedReader(new InputStreamReader(nameSite.openConnection().getInputStream()));
+        String siteLine = "";
+        while((siteLine = siteReader.readLine()) != null){
+            siteLines.add(siteLine);
+        }
+        siteReader.close();
+        return siteLines;
+    }
+    public static ArrayList<String> mostCommonMeaning(String startYear, String endYear, String fname) throws IOException {
+        File targetYear = new File(fname);
+        File [] allYears = targetYear.listFiles(new YearFileFilter());
+        ArrayList<Baby> topName = new ArrayList<>();
+        int lowerYear = convertYear(startYear);
+        int upperyear = convertYear(endYear);
+        assert allYears != null;
+        for(File year: allYears){
+            int thisYear = convertYear(year.getName());
+            ArrayList<Baby> tempList = new ArrayList<>();
+            if( lowerYear<= thisYear && thisYear <= upperyear){
+                updateBabyList(year, tempList);
+                tempList.sort(new FreqSort());
+                Collections.reverse(tempList);
+            }
+                    topName.add(tempList.get(0));
+        }
+        //System.out.println(babyListString(topName));
+        HashMap<Baby,Integer> babyFreq = new HashMap<>();
+        for(Baby babe:topName){
+            babyFreq.putIfAbsent(babe,Collections.frequency(topName,babe));
+        }
+        Integer maxName = Collections.max(babyFreq.values());
+        ArrayList<Baby> topNames   = new ArrayList<>();
+        for(Baby name: babyFreq.keySet()){
+            if(babyFreq.get(name).equals(maxName)){
+                topNames.add(name);
+            }
+        }
+        ArrayList<String> nameMeanings = meaningList();
+        ArrayList<String> retList = new ArrayList<>();
+        for(Baby babe:topNames){
+            for(String meaning:nameMeanings){
+                if(meaning.toLowerCase().contains(babe.getName().toLowerCase()) && meaning.contains(babe.getGender())){
+                    retList.add(meaning);
+                }
+            }
+        }
+        return retList;
+    }
     public static HashMap<String,Integer> sameRankInRange(String startYear, String endYear, int rank, String fname) throws FileNotFoundException{
         HashMap<Baby,Integer> sameName = new HashMap<>();
         ArrayList<ArrayList<Baby>> sameBaby = new ArrayList<>();
