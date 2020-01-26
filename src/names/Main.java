@@ -83,7 +83,48 @@ public class Main {
     final static String male = "M";
     final static String female = "F";
     final static  String siteURL = "https://www2.cs.duke.edu/courses/spring20/compsci307d/assign/01_data/data/ssa_complete/";
+    public static HashMap<String,Integer> sameRankInRange(String startYear, String endYear, int rank, String fname) throws FileNotFoundException{
+        HashMap<Baby,Integer> sameName = new HashMap<>();
+        ArrayList<ArrayList<Baby>> sameBaby = new ArrayList<>();
+        HashMap<String,Integer> sameRankBaby = new HashMap<>();
+        int [] babyRanks;
+        File nameDir = new File(fname);
+        File[] years = nameDir.listFiles( new YearFileFilter());
+        int lowerYear = convertYear(startYear);
+        int upperyear = convertYear(endYear);
+        assert years != null;
+        for(File year: years) {
+            int thisYear = convertYear(year.getName());
+            if (lowerYear <= thisYear && thisYear <= upperyear) { //inclusive range check
+                ArrayList<Baby> tempList = new ArrayList<>();
+                ArrayList<Baby> ourBabies = new ArrayList<>();
+                updateBabyList(year, tempList);
+                tempList.sort(new FreqSort());
+                Collections.reverse(tempList);// get descending order
+                babyRanks = rankArray(tempList);
+                for(int i = 0; i < babyRanks.length;i++){
+                    if(babyRanks[i] == rank){
+                    ourBabies.add(tempList.get(i));
+                    }
+                }
+                sameBaby.add(ourBabies);
+            }
+        }
+        for(ArrayList<Baby> year: sameBaby){
+            for(Baby babe:year){
+                sameName.putIfAbsent(babe,0);
+                sameName.put(babe,sameName.get(babe) + 1);
+            }
+        }
+        Integer maxBaby = Collections.max(sameName.values());
+        for(Baby babe:sameName.keySet()){
+            if(sameName.get(babe).equals(maxBaby)){
+                sameRankBaby.putIfAbsent(babe.toString(),sameName.get(babe));
+            }
+        }
+        return sameRankBaby;
 
+    }
     public static int urlReader(String url) throws IOException {
         URL nameSite = new URL(url);
         ArrayList<String> siteLines = new ArrayList<>();
@@ -115,6 +156,7 @@ public class Main {
         }
         return false;
     }
+
     public static String mostVolatile(String startYear, String endYear, String fname) throws FileNotFoundException {
         File nameDir = new File(fname);
         File[] years = nameDir.listFiles( new YearFileFilter());
@@ -218,12 +260,11 @@ public class Main {
     }
     /**
      * This method creates a  rank array that provides a ranking at an index that corresponds to a name in the babyList
-     * @param name name of interest
-     * @param gender desired gender
+
      * @param temp list of baby objects
      * @return returns the actual array of ranks
      */
-    private static int[] rankArray(String name, String gender,ArrayList<Baby> temp){
+    private static int[] rankArray(ArrayList<Baby> temp){
         int [] ranks = new int[temp.size()];
 
         ranks[0] = 1;
@@ -411,7 +452,7 @@ public class Main {
         }
         recentList.sort(new FreqSort());
         Collections.reverse(recentList);
-        int [] ranks = rankArray(name,gender,recentList);
+        int [] ranks = rankArray(recentList);
         int matchIndex = 0;
         for(int i = 0; i < ranks.length;i++){
             if(ranks[i] == ourRank){ // this block does not check for the same gender as that is not the goal of this questio
