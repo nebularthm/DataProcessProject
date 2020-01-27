@@ -1,6 +1,7 @@
 package names;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.net.*;
 import java.util.*;
 
@@ -789,6 +790,8 @@ public class Main {
             String startYear = "1990";
             String endYear = "2001";
             String fname = "data/ssa_complete";
+            int rank = 7;
+
             int numYears = 5;
             ArrayList<Integer> allNameRanks = allRanks(name,gender,fname);
         int start = convertYear(START);
@@ -804,5 +807,42 @@ public class Main {
         topBabyFreq(topNames);
             ArrayList<Baby> allNameStartWith = commonLetterRange(startYear,endYear,gender,fname);
         System.out.println(babyListToString(allNameStartWith));
+        ArrayList<Integer> nameRanksRange = ranksRange(name,gender,startYear,endYear,fname);
+        ArrayList<Integer> nameRanksNoGender = ranksRangeNoGender(name,startYear,endYear,fname);
+        ArrayList<Integer> recentNameRanks =   recentRanks(name,numYears,fname);
+        start = convertYear(startYear);
+        for(Integer rankRange:nameRanksRange){//all of this prints for question 1
+            System.out.printf("For year %d ", start);
+            System.out.printf("The rank was %d", rankRange);
+            System.out.printf(" for name %s%n", name);
+            start++;
+        }
+        System.out.printf("The difference between year %s ", startYear );
+        System.out.printf("and %s ", endYear);
+        System.out.printf("for name %s ", name);
+        System.out.printf("was %d %n", firstLastDiff(name,gender,startYear,endYear,fname));//question 2
+        System.out.printf("Most volatile name was %s %n", mostVolatile(startYear,endYear,fname));//question 3
+        System.out.printf("The average for this name %s  was ",  name);//question 4
+        System.out.printf("%d %n", averageRank(nameRanksRange));
+        System.out.printf("The average for this name regardless of gender name %s  was ",  name);//question 5
+        System.out.printf("%d %n", averageRank(nameRanksNoGender));
+        System.out.printf("The average for for most recent years name %s  was ",  name);//question 6
+        System.out.printf("%d %n", averageRank(recentNameRanks));
+
+        ArrayList<Baby> genderRange = babyGenderRange(gender,startYear, rank, endYear,fname);
+        start = convertYear(startYear);
+        for(String genderRank:babyListToString(genderRange)){//all of this prints for question 7
+            System.out.printf("For year %d ", start);
+            System.out.printf("The name  %s", genderRank);
+            System.out.printf(" had rank %d %n", rank);
+            start++;
+        }
+        HashMap<String,Integer> sameRankRange = sameRankInRange(startYear,endYear,rank,fname);//This is for Question 8
+        System.out.println(sameRankRange);
+        ArrayList<String> meanings = mostCommonMeaning(startYear,endYear,fname);//this is for queston 9
+        for(String meaning:meanings){
+            System.out.println(meaning);
+
+        }
     }
 }
