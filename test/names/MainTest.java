@@ -21,6 +21,7 @@ public class MainTest {
     final static String tooLow = "1492";//this represents a yar that is outside of the range of years we have access to
     final static String tooHigh = "2150";//this represents a year that is much farther than any year in the data set
     final static int numYears = 3;
+    final static String HELEN_MEANING =  "HELEN f English Possibly from either Greek (helene) \"torch\" or \"corposant\", or Greek (selene) \"moon\"."; //pulled directly from the meaning dataset
     @Test
     public void testAllRank(){
 
@@ -186,7 +187,15 @@ public class MainTest {
         Assert.assertEquals(sameRankTester.size(),sameRankInRange(start,end,1,fname).size());//first see if both maps are of the same size
         Assert.assertEquals(sameRankTester,sameRankInRange(start,end,1,fname));//then check if both maps are of the same types
         Assert.assertEquals(new HashMap<>(), sameRankInRange(tooLow,tooHigh,1,fname));//check if this method works wehn year is out of range
-        
+
+    }
+    @Test
+    public void testMostCommonMeaning(){
+        ArrayList<String> meaningTester = new ArrayList<>();
+        meaningTester.add(HELEN_MEANING);
+        Assert.assertEquals(meaningTester.get(0),mostCommonMeaning(start,end,fname).get(0));//this test is truncated because there are duplicate entries in the source website for Helen M, so we are just evaluating the first entry
+        Assert.assertEquals(new ArrayList<>(),mostCommonMeaning(tooLow,end,fname));//these next two tests are just me testing how this program behaves when it gets bounds
+        Assert.assertEquals(new ArrayList<>(), mostCommonMeaning(start,tooHigh,fname));
     }
 
 

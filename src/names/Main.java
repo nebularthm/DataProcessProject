@@ -67,6 +67,7 @@ public class Main {
     final static String male = "M";
     final static String female = "F";
     final static  String siteURL = "https://www2.cs.duke.edu/courses/spring20/compsci307d/assign/01_data/data/ssa_complete/";
+    final static String siteMeaningURL = "https://www2.cs.duke.edu/courses/compsci307d/spring20/assign/01_data/data/baby_name_meanings.txt";
     public static boolean yearCheck(String year){
         int lowest = convertYear(START);
         int highest = convertYear(END_YEAR);
@@ -117,7 +118,7 @@ public class Main {
         return sameBaby;
     }
     public static ArrayList<String>  meaningList() throws IOException {
-        URL nameSite = new URL(siteURL);
+        URL nameSite = new URL(siteMeaningURL);
         ArrayList<String> siteLines = new ArrayList<>();
         BufferedReader siteReader = new BufferedReader(new InputStreamReader(nameSite.openConnection().getInputStream()));
         String siteLine = "";
@@ -151,7 +152,8 @@ public class Main {
                 tempList.sort(new FreqSort());
                 Collections.reverse(tempList);
             }
-                    topName.add(tempList.get(0));
+                 if(tempList.size() != 0)
+                topName.add(tempList.get(0));
         }
 
         HashMap<Baby,Integer> babyFreq = new HashMap<>();
@@ -166,15 +168,18 @@ public class Main {
             }
         }
         ArrayList<String> nameMeanings = null;
+
         try {
             nameMeanings = meaningList();
         } catch (IOException e) {
             return new ArrayList<>();
         }
+
         ArrayList<String> retList = new ArrayList<>();
         for(Baby babe:topNames){
             for(String meaning:nameMeanings){
-                if(meaning.toLowerCase().contains(babe.getName().toLowerCase()) && meaning.contains(babe.getGender())){
+                String namebound = babe.getName().toLowerCase() + " ";
+                if(meaning.toLowerCase().startsWith(namebound)){
                     retList.add(meaning);
                 }
             }
