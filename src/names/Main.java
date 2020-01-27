@@ -227,7 +227,8 @@ public class Main {
         Integer maxBaby = Collections.max(sameName.values());
         for(Baby babe:sameName.keySet()){
             if(sameName.get(babe).equals(maxBaby)){
-                sameRankBaby.putIfAbsent(babe.toString(),sameName.get(babe));
+                sameRankBaby.putIfAbsent(babe.strinConv(),0);
+                sameRankBaby.put(babe.strinConv(),sameName.get(babe) + 1);
             }
         }
         return sameRankBaby;

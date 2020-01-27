@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static names.Main.*;
 
@@ -177,6 +178,15 @@ public class MainTest {
         Assert.assertEquals(new ArrayList<>(), babyGenderRange("Q",start,1,end,fname));//this test check to see that with invalid gender, this method returns an empty list
         Assert.assertEquals(babyListToString(genderRangeTester),babyListToString(babyGenderRange(female, start, 1, "1992",fname)));//this method checks that empty files, such as yest1992.txt, are not processed if they are within the range of years
 
+    }
+    @Test
+    public void testSameRankInRange(){
+        HashMap<String,Integer> sameRankTester = new HashMap<>();
+        sameRankTester.put("Helen, F",2);//this is the name at the top, it holds that position twice
+        Assert.assertEquals(sameRankTester.size(),sameRankInRange(start,end,1,fname).size());//first see if both maps are of the same size
+        Assert.assertEquals(sameRankTester,sameRankInRange(start,end,1,fname));//then check if both maps are of the same types
+        Assert.assertEquals(new HashMap<>(), sameRankInRange(tooLow,tooHigh,1,fname));//check if this method works wehn year is out of range
+        
     }
 
 
