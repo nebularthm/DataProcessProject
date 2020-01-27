@@ -1,7 +1,6 @@
 package names;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.net.*;
 import java.util.*;
 
@@ -49,22 +48,7 @@ class YearFileFilter implements  FilenameFilter{
         return fname.matches("(.*)[0-9]{4}(.*)");
     }
 }
-class GenderSort implements Comparator<Baby>{
-    public int compare(Baby favorite, Baby middle){
-        String favGender = favorite.gender;
-        String midGender = middle.gender;
-        return favGender.compareTo(midGender);
 
-    }
-}
-class NameSort implements Comparator<Baby>{
-    public int compare(Baby favorite, Baby middle){
-        String favName = favorite.name;
-        String midName = middle.name;
-        return favName.compareTo(midName);
-
-    }
-}
 /**
  * This class is used to sort baby names based on thier frequency, this is useful just in case the data does not come in pre-sorted
  */
@@ -78,12 +62,16 @@ class FreqSort implements  Comparator<Baby>{
     }//Sorts by frequencyor coungt of a given baby name, just in case the names themselves are not sorted. Not necessary for basics, but good for the future
 }
 public class Main {
-    final static String endYear = "2017";
+    final static String END_YEAR = "2017";
     final static String START = "1880";
     final static String male = "M";
     final static String female = "F";
     final static  String siteURL = "https://www2.cs.duke.edu/courses/spring20/compsci307d/assign/01_data/data/ssa_complete/";
-
+    public static boolean yearCheck(String year){
+        int lowest = convertYear(START);
+        int highest = convertYear(END_YEAR);
+        return convertYear(year) >= lowest && convertYear(year) <= highest;
+    }
     public static ArrayList<String>  meaningList() throws IOException {
         URL nameSite = new URL(siteURL);
         ArrayList<String> siteLines = new ArrayList<>();
@@ -96,6 +84,12 @@ public class Main {
         return siteLines;
     }
     public static ArrayList<String> mostCommonMeaning(String startYear, String endYear, String fname) throws IOException {
+        if(!yearCheck(startYear)){
+            return new ArrayList<String>();
+        }
+        if(!yearCheck(endYear)){
+            return new ArrayList<String>();
+        }
         File targetYear = new File(fname);
         File [] allYears = targetYear.listFiles(new YearFileFilter());
         ArrayList<Baby> topName = new ArrayList<>();
@@ -136,6 +130,13 @@ public class Main {
         return retList;
     }
     public static HashMap<String,Integer> sameRankInRange(String startYear, String endYear, int rank, String fname) throws FileNotFoundException{
+        if(!yearCheck(startYear)){
+            return new HashMap<>();
+        }
+        if(!yearCheck(endYear)){
+            return new HashMap<>();
+        }
+
         HashMap<Baby,Integer> sameName = new HashMap<>();
         ArrayList<ArrayList<Baby>> sameBaby = new ArrayList<>();
         HashMap<String,Integer> sameRankBaby = new HashMap<>();
@@ -210,6 +211,12 @@ public class Main {
     }
 
     public static String mostVolatile(String startYear, String endYear, String fname) throws FileNotFoundException {
+        if(!yearCheck(startYear)){
+            return "";
+        }
+        if(!yearCheck(endYear)){
+            return "";
+        }
         File nameDir = new File(fname);
         File[] years = nameDir.listFiles( new YearFileFilter());
         int lowerYear = convertYear(startYear);
@@ -233,6 +240,15 @@ public class Main {
         return startList.get(rankChangeList.indexOf(Collections.max(rankChangeList))).getName();
     }
     public static int firstLastDiff(String name, String gender, String startYear, String endYear,String fname) throws FileNotFoundException{
+        if(!yearCheck(startYear)){
+            return -1;
+        }
+        if(!yearCheck(endYear)){
+            return -1;
+        }
+        if(!gender.equals(male) && !gender.equals(female)){
+            return -1;
+        }
         File nameDir = new File(fname);
         File[] years = nameDir.listFiles( new YearFileFilter());
         int lowerYear = convertYear(startYear);
@@ -292,6 +308,7 @@ public class Main {
      */
 
     private static int babyNameRank(String name, String gender, ArrayList<Baby> temp){
+
         int nameIndex = findName(name,gender,temp); // find the index of our name in the original baby array list
         if(!validName(name,gender,temp)){
             return 0;
@@ -384,6 +401,12 @@ public class Main {
         yearFile.close();
     }
     public static ArrayList<Integer> ranksRangeNoGender(String name, String startYear, String endYear, String fname) throws FileNotFoundException{
+        if(!yearCheck(startYear)){
+            return new ArrayList<>();
+        }
+        if(!yearCheck(endYear)){
+            return new ArrayList<>();
+        }
         ArrayList<Integer> ourName = new ArrayList<>();
         File nameDir = new File(fname);
         File[] years = nameDir.listFiles( new YearFileFilter());
@@ -416,6 +439,15 @@ public class Main {
      * @throws FileNotFoundException
      */
     public static ArrayList<Integer> ranksRange(String name, String gender, String startYear, String endYear, String fname) throws FileNotFoundException{
+        if(!gender.equals(male) && !gender.equals(female)){
+            return new ArrayList<Integer>();
+        }
+        if(!yearCheck(startYear)){
+            return new ArrayList<>();
+        }
+        if(!yearCheck(endYear)){
+            return new ArrayList<>();
+        }
         ArrayList<Integer> ourName = new ArrayList<>();
         File nameDir = new File(fname);
         File[] years = nameDir.listFiles( new YearFileFilter());
@@ -453,6 +485,9 @@ public class Main {
      * @throws FileNotFoundException in case w edon't have the file
      */
     public static ArrayList<Integer> allRanks(String name, String gender, String fname) throws FileNotFoundException {
+        if(!gender.equals(male) && !gender.equals(female)){
+            return new ArrayList<Integer>();
+        }
         ArrayList<Integer> ourName = new ArrayList<>();
         File nameDir = new File(fname);
         File[] years = nameDir.listFiles( new YearFileFilter());
@@ -480,6 +515,12 @@ public class Main {
      * @throws FileNotFoundException in case we don't find the file
      */
     public static Baby sameRank(String name, String gender, String year, String fname ) throws FileNotFoundException {
+        if(!yearCheck(year)){
+            return new Baby(0,"","") ;
+        }
+        if(!gender.equals(male) && !gender.equals(female)){
+            return new Baby(0,"","");
+        }
         File targetYear = new File(fname);
         File [] allYears = targetYear.listFiles( new YearFileFilter());
         ArrayList<Baby> tempList = new ArrayList<>();
@@ -497,7 +538,7 @@ public class Main {
         int ourRank = babyNameRank(name,gender,tempList);
         ArrayList<Baby> recentList = new ArrayList<>();
         for(File file:allYears){
-            if(file.getName().contains(endYear)){
+            if(file.getName().contains(END_YEAR)){
                 updateBabyList(file,recentList);
                 break;
             }
@@ -525,6 +566,16 @@ public class Main {
      * @throws FileNotFoundException in case we don't find the file
      */
     public static ArrayList<Baby> commonNameRange(String startYear, String endYear, String gender ,String fname) throws FileNotFoundException {
+
+        if(!gender.equals(male) && !gender.equals(female)){
+            return new ArrayList<Baby>();
+        }
+        if(!yearCheck(startYear)){
+            return new ArrayList<>();
+        }
+        if(!yearCheck(endYear)){
+            return new ArrayList<>();
+        }
         File targetYear = new File(fname);
         File [] allYears = targetYear.listFiles(new YearFileFilter());
         ArrayList<Baby> topName = new ArrayList<>();
@@ -560,6 +611,15 @@ public class Main {
      * @throws FileNotFoundException in case we don't find the file
      */
     public static ArrayList<Baby> commonLetterRange(String startYear, String endYear, String gender,String fname) throws FileNotFoundException {
+        if(!yearCheck(startYear)){
+            return new ArrayList<>();
+        }
+        if(!yearCheck(endYear)){
+            return new ArrayList<>();
+        }
+        if(!gender.equals(male) && !gender.equals(female)){
+            return new ArrayList<Baby>();
+        }
         ArrayList<Baby> topNames = commonNameRange(startYear,endYear,gender,fname);
         ArrayList<String> seenChar = new ArrayList<>();
         ArrayList<String> startingChars = new ArrayList<>();

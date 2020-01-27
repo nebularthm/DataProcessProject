@@ -100,6 +100,14 @@ public class MainTest {
     public void testURL() throws IOException{
         Assert.assertEquals(1,urlReader("https://www2.cs.duke.edu/courses/spring20/compsci307d/assign/01_data/data/ssa_complete/"));
     }
+    @Test
+    public void testRanksRange() throws FileNotFoundException{
+        ArrayList<Integer> rankRangeTester = new ArrayList<>();
+        rankRangeTester.add(1);//for all 3 files in our test, Helen is the #1 baby name, so we need to have something of size 3 here
+        rankRangeTester.add(1);
+        ArrayList<Integer>  rankRangeTestee = ranksRange(nameHelen,female,start,end,fname);
+        Assert.assertEquals(rankRangeTester.size(),rankRangeTestee.size());
+    }
 
 
 }
