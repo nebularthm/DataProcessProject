@@ -127,6 +127,15 @@ public class MainTest {
         Assert.assertEquals(1,firstLastDiff(nameHelen,female,start,"1992",fname));//this method checks that empty files, such as yest1992.txt, are not processed if they are within the range of years, this value is 1 because the end of the range has a value of 0
 
     }
+    @Test
+    public void testMostVolatile(){
+    String mostVolatileTestee = mostVolatile(start,end,fname);
+    Assert.assertEquals(nameHelen,mostVolatileTestee);// for now just compare the retrurned value
+        Assert.assertEquals("",mostVolatile(tooLow,tooHigh,fname));//this test  checks to see if in the case of an improper year, this method returns an empty object
+         Assert.assertEquals("Hunter",mostVolatile(start,"1992",fname));//this method checks that empty files, such as yest1992.txt, are not processed if they are within the range of years, this value is 1 because the end of the range has a value of 0
+
+
+    }
 
 
 }
