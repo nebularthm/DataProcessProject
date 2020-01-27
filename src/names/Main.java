@@ -510,6 +510,9 @@ public class Main {
         for(int rank:ranks){
             sum += rank;
         }
+        if(ranks.size() == 0){
+            return 0;
+        }
         return sum / ranks.size();
     }
 
