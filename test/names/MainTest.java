@@ -99,7 +99,7 @@ public class MainTest {
     }
     @Test
     public void testURL() throws IOException{
-        Assert.assertEquals(1,urlReader("https://www2.cs.duke.edu/courses/spring20/compsci307d/assign/01_data/data/ssa_complete/"));
+        Assert.assertEquals(1,urlReader("https://www2.cs.duke.edu/courses/spring20/compsci307d/assign/01_data/data/ssa_complete/"));//this test is not complete, it essentially just lets me see what URLReader is printing out to the console relatively easily
     }
     @Test
     public void testRanksRange(){
@@ -162,6 +162,20 @@ public class MainTest {
         int averageRangeTestee = averageRank(averageRangeTester);
         Assert.assertEquals(1,averageRangeTestee);// for now just compare the retrurned value
         Assert.assertEquals(1,averageRank(recentRanks("helen",numYears,fname)));//this method checks that even though the provided name does not exactly match the case pf a name in the dataset, that name stil gets processed
+
+    }
+    @Test
+    public void testbabyGenderRange(){
+        ArrayList<Baby>  genderRangeTester = new ArrayList<>();
+        Baby helen = new Baby(100000,nameHelen,female);
+        genderRangeTester.add(helen);// Helen is the number 1 ranked female in all the test files , so the most popular name should always be Helen
+        genderRangeTester.add(helen);
+        ArrayList<Baby>  genderRangeTestee = babyGenderRange(female,start,1,end,fname);
+        Assert.assertEquals(genderRangeTester.size(),genderRangeTestee.size());// for now just compare the sizes of the returned array
+        Assert.assertEquals(babyListToString(genderRangeTestee), babyListToString(genderRangeTester));//compare the contents of both arraylists
+        Assert.assertEquals(new ArrayList<>(), babyGenderRange(female,tooLow,1,tooHigh,fname));//this test  checks to see if in the case of an improper year, this method returns an empty object
+        Assert.assertEquals(new ArrayList<>(), babyGenderRange("Q",start,1,end,fname));//this test check to see that with invalid gender, this method returns an empty list
+        Assert.assertEquals(babyListToString(genderRangeTester),babyListToString(babyGenderRange(female, start, 1, "1992",fname)));//this method checks that empty files, such as yest1992.txt, are not processed if they are within the range of years
 
     }
 

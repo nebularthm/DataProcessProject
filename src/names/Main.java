@@ -78,6 +78,44 @@ public class Main {
         }
         return file.length() != 0;
     }
+    public static ArrayList<Baby> babyGenderRange(String gender, String startYear, int rank, String endYear, String fname){
+        if(!gender.equals(male) && !gender.equals(female)){
+            return new ArrayList<>();
+        }
+        if(!yearCheck(startYear)){
+            return new ArrayList<>();
+        }
+        if(!yearCheck(endYear)){
+            return new ArrayList<>();
+        }
+        ArrayList<Baby> sameBaby = new ArrayList<>();
+        int [] babyRanks;
+        File nameDir = new File(fname);
+        File[] years = nameDir.listFiles( new YearFileFilter());
+        int lowerYear = convertYear(startYear);
+        int upperyear = convertYear(endYear);
+        assert years != null;
+        for(File year: years) {
+            if(!fileCheck(year)){
+                continue;
+            }
+            int thisYear = convertYear(year.getName());
+            if (lowerYear <= thisYear && thisYear <= upperyear) { //inclusive range check
+                ArrayList<Baby> tempList = new ArrayList<>();
+                updateBabyList(year, tempList);
+                tempList.sort(new FreqSort());
+                Collections.reverse(tempList);// get descending order
+                babyRanks = rankArray(tempList);
+                for(int i = 0; i < babyRanks.length;i++){
+                    if(babyRanks[i] == rank){
+                        if(tempList.get(i).getGender().equals(gender))
+                        sameBaby.add(tempList.get(i));
+                    }
+                }
+            }
+        }
+        return sameBaby;
+    }
     public static ArrayList<String>  meaningList() throws IOException {
         URL nameSite = new URL(siteURL);
         ArrayList<String> siteLines = new ArrayList<>();
@@ -115,7 +153,7 @@ public class Main {
             }
                     topName.add(tempList.get(0));
         }
-        //System.out.println(babyListString(topName));
+
         HashMap<Baby,Integer> babyFreq = new HashMap<>();
         for(Baby babe:topName){
             babyFreq.putIfAbsent(babe,Collections.frequency(topName,babe));
@@ -413,7 +451,7 @@ public class Main {
      * this method reads in a file and puts all the baby names from that file into a stucture that stores Baby objects
      * @param year represents the year in file
      * @param babyList holds list of babies
-     * @throws FileNotFoundException in case we don't have hte file
+
      */
     public static void updateBabyList(File year, ArrayList<Baby> babyList) {
         Scanner yearFile = null;
