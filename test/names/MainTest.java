@@ -19,7 +19,7 @@ public class MainTest {
     final static String female = "F";
     final static String tooLow = "1492";//this represents a yar that is outside of the range of years we have access to
     final static String tooHigh = "2150";//this represents a year that is much farther than any year in the data set
-
+    final static int numYears = 3;
     @Test
     public void testAllRank(){
 
@@ -27,7 +27,6 @@ public class MainTest {
         allRankTester.add(1);//for all 3 files in our test, Helen is the #1 baby name, so we need to have something of size 3 here
         allRankTester.add(1);
         allRankTester.add(1);
-
         Assert.assertEquals(allRankTester.size(), allRanks(nameHelen,female,fname).size() );// tests to see if allRanks produces an array of the proper size
         Assert.assertEquals(allRankTester, allRanks(nameHelen,female,fname) );//see if the contents of the
         allRankTester.clear();
@@ -155,6 +154,14 @@ public class MainTest {
         Assert.assertEquals(0,averageRank(ranksRangeNoGender(nameHelen,tooLow,tooHigh,fname)));//this test  checks to see if in the case of an improper year, this method returns an empty object
         Assert.assertEquals(1,averageRank(ranksRangeNoGender("helen",start,end,fname)));//this method checks that even though the provided name does not exactly match the case pf a name in the dataset, that name stil gets processed
         Assert.assertEquals(1,averageRank(ranksRangeNoGender(nameHelen,start,"1992",fname)));//this method checks that empty files, such as yest1992.txt, are not processed if they are within the range of years, this value is 1 because the end of the range has a value of 0
+
+    }
+    @Test
+    public void testRecentRanks(){
+        ArrayList<Integer> averageRangeTester = recentRanks(nameHelen,numYears,fname);
+        int averageRangeTestee = averageRank(averageRangeTester);
+        Assert.assertEquals(1,averageRangeTestee);// for now just compare the retrurned value
+        Assert.assertEquals(1,averageRank(recentRanks("helen",numYears,fname)));//this method checks that even though the provided name does not exactly match the case pf a name in the dataset, that name stil gets processed
 
     }
 

@@ -320,7 +320,9 @@ public class Main {
             Collections.reverse(tempList);// get descending order
             int ourRank = babyNameRank(name, male, tempList);// get the rank fro this year
             int ourSecondRank = babyNameRank(name,female,tempList);
+            if(ourRank != 0)
             ourName.add(ourRank);
+            if(ourSecondRank != 0)
             ourName.add(ourSecondRank);
         }
         return ourName;
@@ -522,7 +524,7 @@ public class Main {
      * @param gender gender of the baby
      * @param fname name of our file
      * @return returns a list that contains the ranks of this name through the years
-     * @throws FileNotFoundException in case w edon't have the file
+
      */
     public static ArrayList<Integer> allRanks(String name, String gender, String fname)  {
         if(!gender.equals(male) && !gender.equals(female)){
@@ -555,7 +557,7 @@ public class Main {
      * @param year year we are interested in
      * @param fname name of directory
      * @return Returns a baby that has the same rank as the one provided
-     * @throws FileNotFoundException in case we don't find the file
+
      */
     public static Baby sameRank(String name, String gender, String year, String fname ) {
         if(!yearCheck(year)){
@@ -660,7 +662,7 @@ public class Main {
      * @param gender Gender of interest, lets you switch between displaying most popular  names for not just girls, but boys as well
      * @param fname path to the directory that holds all of these diles
      * @return returns an arraylist of all the baby names that start with the most common letter
-     * @throws FileNotFoundException in case we don't find the file
+
      */
     public static ArrayList<Baby> commonLetterRange(String startYear, String endYear, String gender,String fname) {
         if(!yearCheck(startYear)){
