@@ -78,13 +78,13 @@ public class Main {
         if(!file.isFile()){
             return false;
         }
-        return file.length() != 0;
+        return file.length() != 0;//means file has no characters so we can't do anything with it anyway
     }
     public static ArrayList<Baby> babyGenderRange(String gender, String startYear, int rank, String endYear, String fname){
-        if(!gender.equals(male) && !gender.equals(female)){
+        if(!gender.equals(male) && !gender.equals(female)){//if gender is not one of these then its a bust
             return new ArrayList<>();
         }
-        if(!yearCheck(startYear)){
+        if(!yearCheck(startYear)){//check bounds
             return new ArrayList<>();
         }
         if(!yearCheck(endYear)){
@@ -93,12 +93,12 @@ public class Main {
         ArrayList<Baby> sameBaby = new ArrayList<>();
         int [] babyRanks;
         File nameDir = new File(fname);
-        File[] years = nameDir.listFiles( new YearFileFilter());
+        File[] years = nameDir.listFiles( new YearFileFilter());//get the directory contents
         int lowerYear = convertYear(startYear);
-        int upperyear = convertYear(endYear);
+        int upperyear = convertYear(endYear);//convert our ears to ints
         assert years != null;
         for(File year: years) {
-            if(!fileCheck(year)){
+            if(!fileCheck(year)){//invalid file so skip
                 continue;
             }
             int thisYear = convertYear(year.getName());
@@ -110,7 +110,7 @@ public class Main {
                 babyRanks = rankArray(tempList);
                 for(int i = 0; i < babyRanks.length;i++){
                     if(babyRanks[i] == rank){
-                        if(tempList.get(i).getGender().equals(gender))
+                        if(tempList.get(i).getGender().equals(gender))//check gender
                         sameBaby.add(tempList.get(i));
                     }
                 }
@@ -118,7 +118,7 @@ public class Main {
         }
         return sameBaby;
     }
-    public static ArrayList<String>  meaningList() throws IOException {
+    public static ArrayList<String>  meaningList() throws IOException {//this method just gets the tneire text file essentially
         URL nameSite = new URL(siteMeaningURL);
         ArrayList<String> siteLines = new ArrayList<>();
         BufferedReader siteReader = new BufferedReader(new InputStreamReader(nameSite.openConnection().getInputStream()));
@@ -679,24 +679,24 @@ public class Main {
         int upperyear = convertYear(endYear);
         assert allYears != null;
         for(File year: allYears){
-            if(!fileCheck(year)){
+            if(!fileCheck(year)){//if File is invalid, just skip it
                 continue;
             }
             int thisYear = convertYear(year.getName());
             ArrayList<Baby> tempList = new ArrayList<>();
-            if( lowerYear<= thisYear && thisYear <= upperyear){
+            if( lowerYear<= thisYear && thisYear <= upperyear){//within this range
                 updateBabyList(year, tempList);
                 tempList.sort(new FreqSort());
                 Collections.reverse(tempList);
             }
             for(Baby name:tempList){
                 if(name.getGender().equals(gender)){
-                    topName.add(name);
+                    topName.add(name);//ladies and gentleman we got him
                     break;
                 }
             }
         }
-        //System.out.println(babyListString(topName));
+
         return topName;
     }
 
@@ -773,10 +773,10 @@ public class Main {
         HashMap<String,Integer> babyFreq = new HashMap<>();
         ArrayList<String> babyNames = babyListToString(babies);
         for(String babe:babyNames){
-            babyFreq.putIfAbsent(babe,Collections.frequency(babyNames,babe));
+            babyFreq.putIfAbsent(babe,Collections.frequency(babyNames,babe));//to prevent multiple of the same baby
         }
         for(String name: babyFreq.keySet()){
-            System.out.printf("For name %s ", name);
+            System.out.printf("For name %s ", name);//this portion just print out the counts for a name
             System.out.printf(" The count was %d %n", babyFreq.get(name));
         }
     }
@@ -786,7 +786,7 @@ public class Main {
      */
     public static void main (String[] args)  {
             String name = "Helen";//these values are just for me to test main on the real dataset
-            String gender = female;
+            String gender = female;//I could have usrd a constant here
             String startYear = "1990";
             String endYear = "2001";
             String fname = "data/ssa_complete";

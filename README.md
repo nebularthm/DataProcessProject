@@ -89,9 +89,13 @@ This can be seen in the validName method, as well as the babyRank method, and al
 
 genders that are not either M or F (the only ones given in the data files)- This safeguarding  is done by checking all gender-accessing methods at the start to see if the quieried gendier is either M or F, and if not then an empty data type for that method is returned
 
+Also, be cautioned that for Question 9 on the complete dataset, the runtime is extremely long, so it is recommeded to shorten the duration of years to minimizze that.
+
+# JUNIT explained
+For the complete specification, each JUNIT test is split in 3-4 subtests, which either check that the data type returned is correct, or it checks that the potential error cases are correctly safeguarded against.
 
 Extra credit:
-
+Not done in this program, however some methods are robust enough to handle multiple cases not specified in the assignment writeup
 
 ### Notes/Assumptions
 Assumptions made are that all files that this program will access can be relatively/locally pathed to from the data folder
