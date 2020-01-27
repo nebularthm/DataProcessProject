@@ -215,7 +215,7 @@ public class Main {
     private static boolean validName(String name, String gender, ArrayList<Baby> babyList){
 
         for(Baby babe: babyList){
-            if(babe.getGender().equals(gender) && babe.getName().equals(name)){
+            if(babe.getGender().equals(gender) && babe.getName().toLowerCase().equals(name.toLowerCase())){
                 return true;
             }
         }
@@ -381,7 +381,7 @@ public class Main {
      */
     private static int findName(String name, String gender, ArrayList<Baby> temp){
         for(Baby babe:temp){
-            if(babe.getName().equals(name) && babe.getGender().equals(gender)){
+            if(babe.getName().toLowerCase().equals(name.toLowerCase()) && babe.getGender().equals(gender)){
                 return temp.indexOf(babe); //if the name and gender are the same , this this name must be our name
             }
         }
