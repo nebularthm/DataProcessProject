@@ -147,6 +147,16 @@ public class MainTest {
         Assert.assertEquals(1,averageRank(ranksRange(nameHelen,female,start,"1992",fname)));//this method checks that empty files, such as yest1992.txt, are not processed if they are within the range of years, this value is 1 because the end of the range has a value of 0
 
     }
+    @Test
+    public void testAverageOverRangeNoGender(){
+        ArrayList<Integer> averageRangeTester = ranksRangeNoGender(nameHelen,start,end,fname);
+        int averageRangeTestee = averageRank(averageRangeTester);
+        Assert.assertEquals(1,averageRangeTestee);// for now just compare the retrurned value
+        Assert.assertEquals(0,averageRank(ranksRangeNoGender(nameHelen,tooLow,tooHigh,fname)));//this test  checks to see if in the case of an improper year, this method returns an empty object
+        Assert.assertEquals(1,averageRank(ranksRangeNoGender("helen",start,end,fname)));//this method checks that even though the provided name does not exactly match the case pf a name in the dataset, that name stil gets processed
+        Assert.assertEquals(1,averageRank(ranksRangeNoGender(nameHelen,start,"1992",fname)));//this method checks that empty files, such as yest1992.txt, are not processed if they are within the range of years, this value is 1 because the end of the range has a value of 0
+
+    }
 
 
 }
