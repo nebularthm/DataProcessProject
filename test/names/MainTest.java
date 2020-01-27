@@ -17,6 +17,8 @@ public class MainTest {
     final static String nameHenry = "Henry";
     final static String male = "M";
     final static String female = "F";
+    final static String tooLow = "1492";//this represents a yar that is outside of the range of years we have access to
+    final static String tooHigh = "2150";//this represents a year that is much farther than any year in the data set
 
     @Test
     public void testAllRank() throws FileNotFoundException {
@@ -103,10 +105,17 @@ public class MainTest {
     @Test
     public void testRanksRange() throws FileNotFoundException{
         ArrayList<Integer> rankRangeTester = new ArrayList<>();
-        rankRangeTester.add(1);//for all 3 files in our test, Helen is the #1 baby name, so we need to have something of size 3 here
+        rankRangeTester.add(1);//for all 3 files in our test, Helen is the #1 baby name, so we need to have something of size 2 here fpr 1990 and 1991
         rankRangeTester.add(1);
         ArrayList<Integer>  rankRangeTestee = ranksRange(nameHelen,female,start,end,fname);
-        Assert.assertEquals(rankRangeTester.size(),rankRangeTestee.size());
+        Assert.assertEquals(rankRangeTester.size(),rankRangeTestee.size());// for now just compare the sizes of the returned array
+        Assert.assertEquals(rankRangeTestee,rankRangeTester);//compare the contents of both arraylists
+        ArrayList<Integer> badYears = ranksRange(nameHelen,female,tooLow,tooHigh,fname);
+        Assert.assertEquals(new ArrayList<>(), badYears);//this test  checks to see if in the case of an improper year, this method returns an empty object
+        Assert.assertEquals(new ArrayList<>(), ranksRange(nameHelen,"Q",start,end,fname));//this test check to see that with invalid gender, this method returns an empty list
+        Assert.assertEquals(rankRangeTester,ranksRange("helen",female,start,end,fname));//this method checks that even though the provided name does not exactly match the case pf a name in the dataset, that name stil gets processed
+        Assert.assertEquals(rankRangeTester,ranksRange(nameHelen,female,start,"1992",fname));//this method checks that empty files, such as yest1992.txt, are not processed if they are within the range of years
+
     }
 
 
