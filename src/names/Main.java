@@ -72,6 +72,12 @@ public class Main {
         int highest = convertYear(END_YEAR);
         return convertYear(year) >= lowest && convertYear(year) <= highest;
     }
+    public static boolean fileCheck(File file){
+        if(!file.isFile()){
+            return false;
+        }
+        return file.length() != 0;
+    }
     public static ArrayList<String>  meaningList() throws IOException {
         URL nameSite = new URL(siteURL);
         ArrayList<String> siteLines = new ArrayList<>();
@@ -97,6 +103,9 @@ public class Main {
         int upperyear = convertYear(endYear);
         assert allYears != null;
         for(File year: allYears){
+            if(!fileCheck(year)){
+                continue;
+            }
             int thisYear = convertYear(year.getName());
             ArrayList<Baby> tempList = new ArrayList<>();
             if( lowerYear<= thisYear && thisYear <= upperyear){
@@ -147,6 +156,9 @@ public class Main {
         int upperyear = convertYear(endYear);
         assert years != null;
         for(File year: years) {
+            if(!fileCheck(year)){
+                continue;
+            }
             int thisYear = convertYear(year.getName());
             if (lowerYear <= thisYear && thisYear <= upperyear) { //inclusive range check
                 ArrayList<Baby> tempList = new ArrayList<>();
@@ -225,6 +237,9 @@ public class Main {
         ArrayList<Integer> rankChangeList = new ArrayList<>();
         assert years != null;
         for(File year: years) {
+            if(!fileCheck(year)){
+                continue;
+            }
             int thisYear = convertYear(year.getName());
             if (thisYear == lowerYear) { //inclusive range check
                 updateBabyList(year, startList);
@@ -257,6 +272,9 @@ public class Main {
         int endRank = 0;
         assert years != null;
         for(File year: years) {
+            if(!fileCheck(year)){
+                continue;
+            }
             int thisYear = convertYear(year.getName());
             if (thisYear == lowerYear) { //inclusive range check
                 ArrayList<Baby> tempList = new ArrayList<>();
@@ -288,6 +306,9 @@ public class Main {
         }
         assert years != null;
         for(File year: years) {
+            if(!fileCheck(year)){
+                continue;
+            }
             ArrayList<Baby> tempList = new ArrayList<>();
             updateBabyList(year, tempList);
             tempList.sort(new FreqSort());
@@ -414,6 +435,9 @@ public class Main {
         int upperyear = convertYear(endYear);
         assert years != null;
         for(File year: years) {
+            if(!fileCheck(year)){
+                continue;
+            }
             int thisYear = convertYear(year.getName());
             if (lowerYear <= thisYear && thisYear <= upperyear) { //inclusive range check
                 ArrayList<Baby> tempList = new ArrayList<>();
@@ -455,6 +479,9 @@ public class Main {
         int upperyear = convertYear(endYear);
         assert years != null;
         for(File year: years) {
+            if(!fileCheck(year)){
+                continue;
+            }
             int thisYear = convertYear(year.getName());
             if (lowerYear <= thisYear && thisYear <= upperyear) { //inclusive range check
                 ArrayList<Baby> tempList = new ArrayList<>();
@@ -494,6 +521,9 @@ public class Main {
 
         assert years != null;
         for(File year: years) {
+            if(!fileCheck(year)){
+                continue;
+            }
             ArrayList<Baby> tempList = new ArrayList<>();
             updateBabyList(year, tempList);
             tempList.sort(new FreqSort());
@@ -526,6 +556,9 @@ public class Main {
         ArrayList<Baby> tempList = new ArrayList<>();
         assert allYears != null;
         for(File file :allYears ){
+            if(!fileCheck(file)){
+                continue;
+            }
             if(file.getName().contains(year)){
                 updateBabyList(file,tempList);
                 break;
@@ -535,6 +568,9 @@ public class Main {
 
         tempList.sort(new FreqSort());
         Collections.reverse(tempList);
+        if(tempList.size() == 0){
+            return new Baby(0,"","");
+        }
         int ourRank = babyNameRank(name,gender,tempList);
         ArrayList<Baby> recentList = new ArrayList<>();
         for(File file:allYears){
@@ -583,6 +619,9 @@ public class Main {
         int upperyear = convertYear(endYear);
         assert allYears != null;
         for(File year: allYears){
+            if(!fileCheck(year)){
+                continue;
+            }
             int thisYear = convertYear(year.getName());
             ArrayList<Baby> tempList = new ArrayList<>();
             if( lowerYear<= thisYear && thisYear <= upperyear){
@@ -644,6 +683,9 @@ public class Main {
         ArrayList<Baby> keptList = new ArrayList<>();
         assert allYears != null;
         for(File file :allYears ){
+            if(!fileCheck(file)){
+                continue;
+            }
             ArrayList<Baby> tempList = new ArrayList<>();
             int bounds = convertYear(file.getName());
             int lowerYear = convertYear(startYear);
@@ -688,6 +730,7 @@ public class Main {
             String startYear = "1990";
             String endYear = "2001";
             String fname = "data/ssa_complete";
+            int numYears = 5;
             ArrayList<Integer> allNameRanks = allRanks(name,gender,fname);
         int start = convertYear(START);
         for (Integer allNameRank : allNameRanks) {
