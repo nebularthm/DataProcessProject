@@ -120,6 +120,12 @@ public class MainTest {
     @Test
     public void testFirstLastDiff(){
         int firstLastTestee = firstLastDiff(nameHelen,female,start,end,fname);
+        Assert.assertEquals(0,firstLastTestee);// for now just compare the retrurned value
+        Assert.assertEquals(-1,firstLastDiff(nameHelen,female,tooLow,tooHigh,fname));//this test  checks to see if in the case of an improper year, this method returns an empty object
+        Assert.assertEquals(-1, firstLastDiff(nameHelen,"Q",start,end,fname));//this test check to see that with invalid gender, this method returns an empty list
+        Assert.assertEquals(0,firstLastDiff("helen",female,start,end,fname));//this method checks that even though the provided name does not exactly match the case pf a name in the dataset, that name stil gets processed
+        Assert.assertEquals(1,firstLastDiff(nameHelen,female,start,"1992",fname));//this method checks that empty files, such as yest1992.txt, are not processed if they are within the range of years, this value is 1 because the end of the range has a value of 0
+
     }
 
 
