@@ -21,7 +21,7 @@ public class MainTest {
     final static String tooHigh = "2150";//this represents a year that is much farther than any year in the data set
 
     @Test
-    public void testAllRank() throws FileNotFoundException {
+    public void testAllRank(){
 
         ArrayList<Integer> allRankTester = new ArrayList<>();
         allRankTester.add(1);//for all 3 files in our test, Helen is the #1 baby name, so we need to have something of size 3 here
@@ -40,7 +40,7 @@ public class MainTest {
 
     }
     @Test
-    public void testSameRank() throws FileNotFoundException{
+    public void testSameRank(){
     Baby sameRankTester = new Baby(100000,nameHelen,female);
     Baby sameRankMethod = sameRank(nameHelen,female,start,fname);
     Assert.assertEquals(sameRankTester.getFrequency(), sameRankMethod.getFrequency() );// These 3 tests determine if the baby object produced by the sameRank method is was it should be
@@ -52,7 +52,7 @@ public class MainTest {
         Assert.assertEquals(sameRankTester.getGender(),sameRankMethod.getGender());
     }
     @Test
-    public void testCommonNameRange() throws FileNotFoundException{
+    public void testCommonNameRange(){
     ArrayList<Baby> commonNameRangeTester = new ArrayList<>();
     Baby helen = new Baby(100000,nameHelen,female);
     commonNameRangeTester.add(helen);// Helen is the number 1 ranked female in all the test files , so the most popular name should always be Helen
@@ -71,7 +71,7 @@ public class MainTest {
 
     }
     @Test
-    public void testCommonLetterRange() throws FileNotFoundException{
+    public void testCommonLetterRange(){
         ArrayList<Baby> commonLetterTester = new ArrayList<>();
         Baby helen = new Baby(100000, nameHelen,female);
         Baby harriet = new Baby(28,"Harriet",female);
@@ -103,7 +103,7 @@ public class MainTest {
         Assert.assertEquals(1,urlReader("https://www2.cs.duke.edu/courses/spring20/compsci307d/assign/01_data/data/ssa_complete/"));
     }
     @Test
-    public void testRanksRange() throws FileNotFoundException{
+    public void testRanksRange(){
         ArrayList<Integer> rankRangeTester = new ArrayList<>();
         rankRangeTester.add(1);//for all 3 files in our test, Helen is the #1 baby name, so we need to have something of size 2 here fpr 1990 and 1991
         rankRangeTester.add(1);
@@ -116,6 +116,10 @@ public class MainTest {
         Assert.assertEquals(rankRangeTester,ranksRange("helen",female,start,end,fname));//this method checks that even though the provided name does not exactly match the case pf a name in the dataset, that name stil gets processed
         Assert.assertEquals(rankRangeTester,ranksRange(nameHelen,female,start,"1992",fname));//this method checks that empty files, such as yest1992.txt, are not processed if they are within the range of years
 
+    }
+    @Test
+    public void testFirstLastDiff(){
+        int firstLastTestee = firstLastDiff(nameHelen,female,start,end,fname);
     }
 
 

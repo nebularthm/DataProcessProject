@@ -89,14 +89,14 @@ public class Main {
         siteReader.close();
         return siteLines;
     }
-    public static ArrayList<String> mostCommonMeaning(String startYear, String endYear, String fname) throws IOException {
+    public static ArrayList<String> mostCommonMeaning(String startYear, String endYear, String fname){
         if(!yearCheck(startYear)){
-            return new ArrayList<String>();
+            return new ArrayList<>();
         }
         if(!yearCheck(endYear)){
             return new ArrayList<String>();
         }
-        File targetYear = new File(fname);
+        File  targetYear = new File(fname);
         File [] allYears = targetYear.listFiles(new YearFileFilter());
         ArrayList<Baby> topName = new ArrayList<>();
         int lowerYear = convertYear(startYear);
@@ -127,7 +127,12 @@ public class Main {
                 topNames.add(name);
             }
         }
-        ArrayList<String> nameMeanings = meaningList();
+        ArrayList<String> nameMeanings = null;
+        try {
+            nameMeanings = meaningList();
+        } catch (IOException e) {
+            return new ArrayList<>();
+        }
         ArrayList<String> retList = new ArrayList<>();
         for(Baby babe:topNames){
             for(String meaning:nameMeanings){
@@ -138,7 +143,7 @@ public class Main {
         }
         return retList;
     }
-    public static HashMap<String,Integer> sameRankInRange(String startYear, String endYear, int rank, String fname) throws FileNotFoundException{
+    public static HashMap<String,Integer> sameRankInRange(String startYear, String endYear, int rank, String fname){
         if(!yearCheck(startYear)){
             return new HashMap<>();
         }
@@ -222,7 +227,7 @@ public class Main {
         return false;
     }
 
-    public static String mostVolatile(String startYear, String endYear, String fname) throws FileNotFoundException {
+    public static String mostVolatile(String startYear, String endYear, String fname){
         if(!yearCheck(startYear)){
             return "";
         }
@@ -254,7 +259,7 @@ public class Main {
         }
         return startList.get(rankChangeList.indexOf(Collections.max(rankChangeList))).getName();
     }
-    public static int firstLastDiff(String name, String gender, String startYear, String endYear,String fname) throws FileNotFoundException{
+    public static int firstLastDiff(String name, String gender, String startYear, String endYear,String fname) {
         if(!yearCheck(startYear)){
             return -1;
         }
@@ -294,7 +299,7 @@ public class Main {
         }
         return startRank - endRank;
     }
-    public static ArrayList<Integer> recentRanks(String name, int numYears, String fname) throws FileNotFoundException{
+    public static ArrayList<Integer> recentRanks(String name, int numYears, String fname){
         ArrayList<Integer> ourName = new ArrayList<>();
         File nameDir = new File(fname);
         File[] temp = nameDir.listFiles( new YearFileFilter());
@@ -408,8 +413,13 @@ public class Main {
      * @param babyList holds list of babies
      * @throws FileNotFoundException in case we don't have hte file
      */
-    public static void updateBabyList(File year, ArrayList<Baby> babyList) throws FileNotFoundException {
-        Scanner yearFile = new Scanner(year);
+    public static void updateBabyList(File year, ArrayList<Baby> babyList) {
+        Scanner yearFile = null;
+        try {
+            yearFile = new Scanner(year);
+        } catch (FileNotFoundException e) {
+            return;
+        }
         while (yearFile.hasNextLine()) {
             String nameLine = yearFile.nextLine();
             String[] babyParts = nameLine.split(",");
@@ -421,7 +431,7 @@ public class Main {
 
         yearFile.close();
     }
-    public static ArrayList<Integer> ranksRangeNoGender(String name, String startYear, String endYear, String fname) throws FileNotFoundException{
+    public static ArrayList<Integer> ranksRangeNoGender(String name, String startYear, String endYear, String fname) {
         if(!yearCheck(startYear)){
             return new ArrayList<>();
         }
@@ -462,7 +472,7 @@ public class Main {
      * @return
      * @throws FileNotFoundException
      */
-    public static ArrayList<Integer> ranksRange(String name, String gender, String startYear, String endYear, String fname) throws FileNotFoundException{
+    public static ArrayList<Integer> ranksRange(String name, String gender, String startYear, String endYear, String fname){
         if(!gender.equals(male) && !gender.equals(female)){
             return new ArrayList<Integer>();
         }
@@ -495,7 +505,7 @@ public class Main {
         return ourName;
     }
 
-    public static int averageRank(ArrayList<Integer> ranks) throws FileNotFoundException {
+    public static int averageRank(ArrayList<Integer> ranks)  {
         int sum = 0;
         for(int rank:ranks){
             sum += rank;
@@ -511,7 +521,7 @@ public class Main {
      * @return returns a list that contains the ranks of this name through the years
      * @throws FileNotFoundException in case w edon't have the file
      */
-    public static ArrayList<Integer> allRanks(String name, String gender, String fname) throws FileNotFoundException {
+    public static ArrayList<Integer> allRanks(String name, String gender, String fname)  {
         if(!gender.equals(male) && !gender.equals(female)){
             return new ArrayList<Integer>();
         }
@@ -544,7 +554,7 @@ public class Main {
      * @return Returns a baby that has the same rank as the one provided
      * @throws FileNotFoundException in case we don't find the file
      */
-    public static Baby sameRank(String name, String gender, String year, String fname ) throws FileNotFoundException {
+    public static Baby sameRank(String name, String gender, String year, String fname ) {
         if(!yearCheck(year)){
             return new Baby(0,"","") ;
         }
@@ -601,7 +611,7 @@ public class Main {
      * @return returns an arrayList of the most popular name(s) over this time period, in he actual main method this list will be parsed to find the most popular name(s) over that span
      * @throws FileNotFoundException in case we don't find the file
      */
-    public static ArrayList<Baby> commonNameRange(String startYear, String endYear, String gender ,String fname) throws FileNotFoundException {
+    public static ArrayList<Baby> commonNameRange(String startYear, String endYear, String gender ,String fname)  {
 
         if(!gender.equals(male) && !gender.equals(female)){
             return new ArrayList<Baby>();
@@ -649,7 +659,7 @@ public class Main {
      * @return returns an arraylist of all the baby names that start with the most common letter
      * @throws FileNotFoundException in case we don't find the file
      */
-    public static ArrayList<Baby> commonLetterRange(String startYear, String endYear, String gender,String fname) throws FileNotFoundException {
+    public static ArrayList<Baby> commonLetterRange(String startYear, String endYear, String gender,String fname) {
         if(!yearCheck(startYear)){
             return new ArrayList<>();
         }
@@ -724,7 +734,7 @@ public class Main {
     /**
      * Start of the program.
      */
-    public static void main (String[] args) throws FileNotFoundException {
+    public static void main (String[] args)  {
             String name = "Helen";//these values are just for me to test main on the real dataset
             String gender = female;
             String startYear = "1990";
