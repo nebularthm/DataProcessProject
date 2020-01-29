@@ -175,7 +175,9 @@ public class Main {
         } catch (IOException e) {
             return new ArrayList<>();
         }
-
+        for(Baby babe:topNames){
+            System.out.printf("The top baby held the top spot %d times %n",babyFreq.get(babe));
+        }
         ArrayList<String> retList = new ArrayList<>();
         for(Baby babe:topNames){
             for(String meaning:nameMeanings){
